@@ -138,6 +138,7 @@ def uopolski(week):
             elif table[i]['grupa'][:1].strip().isdigit():
                 table[i]['grupa'] == int(table[i]['grupa'][:1])
                 if int(table[i]['grupa'][:1]) in grupy:
+                    table[i]['grupa'] = str(table[i]['grupa'][:1])
                     filtered.append(table[i])
 
     # print(filtered[2])
