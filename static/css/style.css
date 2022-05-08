@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@100;300;400;500;700&display=swap');
 
 :root {
     --accent-color: rgb(123, 186, 227);
@@ -204,6 +204,12 @@ main {
     height: calc(100% - 1px);
     border-bottom: 1px solid rgba(0, 0, 0, 0.3);
     border-top: 1px solid rgba(0, 0, 0, 0.3);
+    border-top-left-radius: 1em;
+}
+
+.hours p:last-of-type::after {
+    height: calc(100% - 1px);
+    border-bottom-left-radius: 1em;
 }
 
 .timetable {
@@ -218,16 +224,82 @@ footer {
     border-top: 1px solid white;
 }
 
-footer a {
+/* HOMEPAGE */
+
+main#homepage {
+    width: 70vw;
+    display: flex;
+    flex-direction: column;
+    gap: 4em;
+    color: white;
+}
+
+main#homepage > section {
+    padding: 1em;
+    border-inline: 1px solid white;
+}
+
+main#homepage > section > h2 {
+    padding-bottom: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+main#homepage section#choose form {
+    width: 50%;
+    margin-inline: auto;
+    padding: 2em;
+}
+
+main#homepage section#choose form div {
+    display: flex;
+    flex-direction: column;
+    margin-block: 1em;
+}
+
+main#homepage section#choose form div label {
+    font-size: 80%;
+}
+
+main#homepage section#choose form div button {
+    width: 30%;
+    align-self: flex-end;
+    margin: 0;
+}
+
+
+/* GLOBAL */
+
+span.bold {
+    font-weight: 500;
+}
+
+p.note {
+    font-size: 80%;
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+    position: relative;
+}
+
+p.note::after {
+    content: '';
+    height: 100%;
+    border-left: 1px solid red;
+    bottom: 0;
+    left: -1rem;
+    position: absolute;
+}
+
+a {
     text-decoration: none;
     color: var(--accent-color);
 }
 
-footer a:hover {
+a:hover {
     color: rgb(80, 178, 244);
 }
 
-footer button {
+button {
     background-color: var(--accent-color);
     color: black;
     border: none;
@@ -237,7 +309,7 @@ footer button {
     transition-duration: .25s;
 }
 
-footer button:hover {
+button:hover {
     background-color: black;
     color: white;
 }

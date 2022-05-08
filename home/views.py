@@ -227,11 +227,11 @@ def uopolski(week):
     # print(filteredWeekdays)
     iCalPath = 'plan.ics'
     genIcal(filtered, iCalPath)
-    context = {'title': 'plan v0.1', 'today' : today, 'weekday': days[todaysWeekday], 'weekArr': weekArr, 'planFiltered': filteredWeekdays, 'wNum': week, 'hours': hours, 'filePath': 'icals/' + iCalPath}
+    context = {'title': 'plan v0.5', 'today' : today, 'weekday': days[todaysWeekday], 'weekArr': weekArr, 'planFiltered': filteredWeekdays, 'wNum': week, 'hours': hours, 'filePath': 'icals/' + iCalPath}
     return context
 
-class index(TemplateView):
-    template = 'home.html'
+class timetable(TemplateView):
+    template = 'timetable.html'
     #readPDF()
 
     def get(self, request):
@@ -248,3 +248,14 @@ class index(TemplateView):
 
         # sprawdzenie czy zmienila sie data w porownaniu do poprzedniej, jak tak to przeskakujemy do nastepnej
         # w kazdym dniu bloki co 1h - position relative, w nich obiekt np godzina 9:30 przypinamy do 3 bloku(bo zaczynamy od 7) i dajemy top 50%
+        
+class home(TemplateView):
+    template = 'home.html'
+
+    def get(self, request):
+        context = {'title': 'Timetable scrapper | home'}
+        return render(request, self.template, context)
+
+    def post(self, request):
+        context = {'title': 'Timetable scrapper | home'}
+        return render(request, self.template, context)

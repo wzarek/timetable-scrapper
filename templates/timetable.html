@@ -1,0 +1,71 @@
+{% load static %}
+{% load mathfilters %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>{{ title }}</title>
+</head>
+    <body>
+    <header>
+        <h1>Timetable scrapper</h1>
+        <p>dzisiaj jest {{ weekday }}, {{ today }}</p>
+        <p>menu</p>
+    </header>
+    <section class='buttons-week'>
+        <form method='post' action="{% url 'homepage' %}">
+            {% csrf_token %}
+            <button title="poprzedni tydzień" type="submit" name="w" value="{{ wNum | add:-1 }}">&#10094;</button>
+        </form>
+        <form method='post' action="{% url 'homepage' %}">
+            {% csrf_token %}
+            <button title="następny tydzień" type="submit" name="w" value="{{ wNum | add:1 }}">&#10095;</button>
+        </form>
+    </section>
+    <main>
+        <section class='hours'>
+            {% for h in hours %}
+                <p>{{ h }}</p>
+            {% endfor %}
+        </section>
+        <section class='timetable'>
+            <section class="weekdays">
+                {% for key, day in weekArr.items %}
+                    <div class="day-single {%if today == day %}today{%endif%}">
+                        <p>{{ key }}</p>
+                        <span>{{ day }}</span>
+                    </div>
+                {% endfor %}
+            </section>
+            <section class='plan'>
+                {% for key, var in planFiltered.items %}
+                    <section class='plan-day'>
+                        {% for k in var %}
+                        <div data-masno='{{ k.dlugosc }}' style='height: {{ k.dlugosc | mul:3 |floatformat:2 }}vh; margin-top: {{ k.diff | mul:3 |floatformat:2 }}vh;' class='plan-single {%if today == k.data %}today{%endif%}'>
+                            <span>{{ k.od }} - {{ k.do }}</span>
+                            <h4>{{ k.przedmiot }}</h4>
+                            <p>{{ k.stopien }} {{ k.imie }} {{ k.nazwisko }}</p>
+                            <p>sala: {{ k.sala }}</p>
+                            <p>gr.: {{ k.grupa }}</p>
+                        </div>
+                        {% empty %}
+                        <div class="empty"></div>
+                        {% endfor %}
+                    </section>
+                {% endfor %}
+            </section>
+        </section>
+    </main>
+    <footer>
+        <p>created by Maciej Krawczyk &copy; <a href="https://wzarek.me">wzarek.me</a></p>
+        <form class='buttons-current' method='post' action="{% url 'homepage' %}">
+            {% csrf_token %}
+            <button type="submit" name="w" value="0">obecny tydzien</button>
+        </form>
+        <a href="{{ filePath }}" download>pobierz iCalendar</a>
+    </footer>
+</body>
+</html>
