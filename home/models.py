@@ -1,5 +1,6 @@
 from turtle import ondrag
 from django.db import models
+import os
 
 class University(models.Model):
     name = models.CharField(max_length=100)
@@ -19,13 +20,17 @@ class Field(models.Model):
     type = models.CharField(max_length=50)
     root_link = models.URLField()
     link = models.URLField()
+    file = models.FileField(upload_to='sheets/')
     created = models.DateTimeField()
     updated = models.DateTimeField()
     university = models.ForeignKey(University, on_delete=models.CASCADE)
     slug = models.SlugField()
 
     def __str__(self):
-        return self.name
+        return self.slug
+    
+    def filename(self):
+        return os.path.basename(self.file.name)
 
 class Group(models.Model):
     name = models.CharField(max_length=100)

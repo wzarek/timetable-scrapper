@@ -1,0 +1,29 @@
+{% load static %}
+{% load mathfilters %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>{{ title }}</title>
+</head>
+    <body>
+    <header>
+        <h1>
+            <a href="{% url 'homepage' %}">Timetable scrapper</a>
+        </h1>
+        <p>{{ headertitle }}</p>
+        <p>menu</p>
+    </header>
+    {% block content %}
+    {% endblock content %}
+    <footer>
+        <p>stworzone przez Maciej Krawczyk &copy; <a href="https://wzarek.me">wzarek.me</a></p>
+        {% block footer %}
+        {% endblock footer %}
+    </footer>
+</body>
+</html>

@@ -1,19 +1,6 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>{{ title }}</title>
-</head>
-<body>
-    <header>
-        <h1>Timetable scrapper</h1>
-        <p>narzędzie do upraszczania planu zajęć</p>
-        <p>menu</p>
-    </header>
+{% block content %}
     <main id="homepage">
         <section id="about">
             <h2>Jak to działa?</h2>
@@ -22,44 +9,22 @@
                 Twoja uczelnia tego potrzebuje? Skontaktuj się na <a href="mailto:contact@wzarek.me">contact@wzarek.me</a> <br />
             </p>
             <p>
-                Plan na stronie uczelni umieszczony jest w postaci arkuszu Excela, który nie grzeszy przejrzystością.
-                Naszym zadaniem jest to zmienić - zmieniamy nudny, cięzki do rozszyfrowania plan na graficznie przedstawiony rozkład zajęć wraz z możliwością dodania go do własnego kalendarza. <br />
-                A to wszystko jest bajecznie proste - wystarczy wybrać kierunek i grupę, a cała magia stanie się bez Twojej większej ingerencji! <br />
-                Jeśli natomiast masz z czymś problem bądź nie wiesz jak pobrać plan i zapisać go do swojego kalendarza np. na telefonie to idealnym miejscem dla Ciebie będzie <a href="#">poradnik</a>, który pokieruje Cię krok po kroku.
+                Plan na stronie uczelni umieszczony jest w postaci <span class="bold">arkuszu Excela</span>, który nie grzeszy przejrzystością.
+                Naszym zadaniem jest to zmienić - zmieniamy nudny, cięzki do rozszyfrowania plan na <span class="bold">graficznie przedstawiony</span> rozkład zajęć wraz z możliwością dodania go do <span class="bold">własnego kalendarza</span>. <br />
+                A to wszystko jest bajecznie proste - wystarczy wybrać <span class="bold">kierunek i grupę</span>, a cała magia stanie się <span class="bold">bez</span> Twojej większej <span class="bold">ingerencji</span>! <br /> <br />
+                Jeśli natomiast masz z czymś <span class="bold">problem</span> bądź nie wiesz jak <span class="bold">pobrać</span> plan i <span class="bold">zapisać</span> go do swojego kalendarza np. na telefonie to idealnym miejscem dla Ciebie będzie <a href="#"><span class="bold">poradnik</span></a>, który pokieruje Cię krok po kroku.
             </p>
         </section>
         <section id="choose">
             <h2>Wybierz kierunek i grupy</h2>
-            <p class="note">
-                Twojej grupy albo kierunku nie ma na liście? Zgłoś to na <a href="mailto:contact@wzarek.me">contact@wzarek.me</a>
+            <p>
+                aby wybrać grupę i kierunek kliknij
+                <a href="{% url 'chooser-field' %}">tutaj</a>
             </p>
-            <form method='get' action="{% url 'timetable' %}">
-                <div class="form-field">
-                    <label for="field">kierunek</label>
-                    <select name="field" id="field">
-                        {% for field in fields %}
-                        <option value="{{ field.slug }}">{{ field.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-field">
-                    <label for="groups">grupy</label>
-                    <select multiple name="groups" id="groups">
-                        {% for group in groups %}
-                        <option value="{{ group.slug }}">{{ group.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-field">
-                    <button type="submit">przejdź dalej</button>
-                </div>
-            </form>
         </section>
     </main>
-    <footer>
-        <p>stworzone przez Maciej Krawczyk &copy; <a href="https://wzarek.me">wzarek.me</a></p>
-        <a href="#homepage">do góry</a>
-        <p>widzisz błąd na stronie? <a href="mailto:contact@wzarek.me">zgłoś to</a></p>
-    </footer>
-</body>
-</html>
+{% endblock content %}
+{% block footer %}
+    <a href="#homepage">do góry</a>
+    <p>widzisz błąd na stronie? <a href="mailto:contact@wzarek.me">zgłoś to</a></p>
+{% endblock footer %}

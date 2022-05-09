@@ -15,17 +15,7 @@
 body {
     background-color: rgba(52, 67, 102, 1);
     background-image: linear-gradient(90deg, rgba(52, 67, 102, 1) 0%, rgba(76, 106, 178, 1) 100%);
-}
-
-h1 {
-    font-weight: 500;
-    margin: .5em 1em;
-}
-
-
-button {
-    padding: .5vh .5vw;
-    margin: .5vh .5vw;
+    color: white;
 }
 
 /* HEADER */
@@ -62,6 +52,19 @@ main {
     width: 80%;
     margin-inline: auto;
     margin-block: 8vh;
+}
+
+/* PLAN */
+
+main#timetable {
+    color: black;
+}
+
+main#timetable .form-groups {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    margin-bottom: 1em;
 }
 
 .plan {
@@ -238,6 +241,7 @@ main#homepage {
 main#homepage > section {
     padding: 1em;
     border-inline: 1px solid white;
+    font-size: 95%;
 }
 
 main#homepage > section > h2 {
@@ -246,23 +250,65 @@ main#homepage > section > h2 {
     font-weight: 500;
 }
 
-main#homepage section#choose form {
+/* WYBOR GRUPY */
+
+main#choose {
+    height: 70vh;
+    display: block;
+}
+
+main#choose form {
     width: 50%;
     margin-inline: auto;
     padding: 2em;
+    color: white;
 }
 
-main#homepage section#choose form div {
+main#choose form div {
     display: flex;
     flex-direction: column;
+    gap: .25em;
     margin-block: 1em;
 }
 
-main#homepage section#choose form div label {
+main#choose form div label {
     font-size: 80%;
 }
 
-main#homepage section#choose form div button {
+main#choose form div select {
+    padding: .5em .75em;
+    background-color: rgba(255, 255, 255, 0.4);
+    border: none;
+    border-radius: 1em;
+}
+
+main#choose form div select:focus {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+main#choose form div select[multiple] {
+    min-height: 10vh;
+    max-height: 20vh;
+    outline: none;
+}
+
+main#choose form div select[multiple]:focus {
+    border-bottom-left-radius: 1em;
+    border-bottom-right-radius: 1em;
+}
+
+main#choose form div select[multiple] option {
+    padding-inline: .5em;
+    border-radius: 1em;
+}
+
+main#choose form div select[multiple] option:checked {
+    background-color: black;
+    color: white;
+}
+
+main#choose form div button {
     width: 30%;
     align-self: flex-end;
     margin: 0;
@@ -271,12 +317,27 @@ main#homepage section#choose form div button {
 
 /* GLOBAL */
 
+h1 {
+    font-weight: 500;
+    margin: .5em 1em;
+}
+
+
+button {
+    padding: .5vh .5vw;
+    margin: .5vh .5vw;
+}
+
+h1 > a {
+    font-weight: 500;
+}
+
 span.bold {
     font-weight: 500;
 }
 
 p.note {
-    font-size: 80%;
+    font-size: .8rem;
     margin-bottom: 1rem;
     margin-left: 1rem;
     position: relative;

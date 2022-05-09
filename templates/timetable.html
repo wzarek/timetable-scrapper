@@ -1,21 +1,8 @@
+{% extends 'base.html' %}
 {% load static %}
 {% load mathfilters %}
 {% load i18n %}
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>{{ title }}</title>
-</head>
-    <body>
-    <header>
-        <h1>Timetable scrapper</h1>
-        <p>dzisiaj jest {{ weekday }}, {{ today }}</p>
-        <p>menu</p>
-    </header>
+{% block content %}
     <section class='buttons-week'>
         <form method='get' action="{% url 'timetable' %}">
             <button title="poprzedni tydzień" type="submit" name="week" value="{{ wNum | add:-1 }}">&#10094;</button>
@@ -24,25 +11,29 @@
             <button title="następny tydzień" type="submit" name="week" value="{{ wNum | add:1 }}">&#10095;</button>
         </form>
     </section>
-    <main>
+    <main id="timetable">
         <p class="note">
-            Plan zajęć dla
-            <span class="bold">{{ note }}</span>
+            Plan zajęć dla:
+            <span class="bold">{{ note }}</span>;
             Wybrane grupy: 
             <span class="bold">
             {% for group in groups %}
-                {{ group }}
+                {{ group }}{% if not forloop.last %},{% endif %}
             {% endfor %}
             </span>
         </p>
+        <form class="form-groups" action="{% url 'chooser-group' %}" method="get">
+            <input aria-label='kierunek' type="text" name="field" id="field" value="{{ field.slug }}" style="visibility: hidden; width: 0; border: none">
+            <button type="submit">wybierz inne grupy</button>
+        </form>
         <p class="note">
             Ostatnia aktualizacja: 
             <span class="bold">
                 {% language 'pl' %}
-                {{ updated|date:'D, d N H:i:s' }}
+                {{ field.updated|date:'D, d N H:i:s' }}
                 {% endlanguage %}
             </span> 
-            <a href="#">zgłoś błąd</a>
+            <a href="mailto:contact@wzarek.me">zgłoś błąd</a>
         </p>
         <section class='hours'>
             {% for h in hours %}
@@ -77,12 +68,10 @@
             </section>
         </section>
     </main>
-    <footer>
-        <p>created by Maciej Krawczyk &copy; <a href="https://wzarek.me">wzarek.me</a></p>
-        <form class='buttons-current' method='get' action="{% url 'timetable' %}">
-            <button type="submit" name="week" value="0">obecny tydzien</button>
-        </form>
-        <a href="{{ filePath }}" download>pobierz iCalendar</a>
-    </footer>
-</body>
-</html>
+{% endblock content %}
+{% block footer %}
+    <form class='buttons-current' method='get' action="{% url 'timetable' %}">
+        <button type="submit" name="week" value="0">obecny tydzień</button>
+    </form>
+    <a href="{{ filePath }}" download>pobierz iCalendar</a>
+{% endblock footer %}

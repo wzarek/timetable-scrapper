@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<main id="choose">
+    <form method='get' action="{% url 'chooser-group' %}">
+        <div class="form-field">
+            <label for="field">kierunek</label>
+            <select name="field" id="field">
+                {% for field in fields %}
+                <option value="{{ field.slug }}">{{ field.name }}, {{ field.year }} rok, {{ field.degree }}, {{ field.type }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <p class="note">
+            Twojego kierunku nie ma na liście? Zgłoś to na <a href="mailto:contact@wzarek.me">contact@wzarek.me</a>
+        </p>
+        <div class="form-field">
+            <button type="submit">przejdź dalej</button>
+        </div>
+    </form>
+</main>
+{% endblock content %}
