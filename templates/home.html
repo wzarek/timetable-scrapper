@@ -33,19 +33,21 @@
             <p class="note">
                 Twojej grupy albo kierunku nie ma na liście? Zgłoś to na <a href="mailto:contact@wzarek.me">contact@wzarek.me</a>
             </p>
-            <form action="">
+            <form method='get' action="{% url 'timetable' %}">
                 <div class="form-field">
                     <label for="field">kierunek</label>
                     <select name="field" id="field">
-                        <option value="dietetyka">dietetyka</option>
+                        {% for field in fields %}
+                        <option value="{{ field.slug }}">{{ field.name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="form-field">
-                    <label for="group">grupy</label>
-                    <select multiple name="group" id="group">
-                        <option value="dietetyka">dietetyka</option>
-                        <option value="kierunek2">kierunek2</option>
-                        <option value="kierunek3">dasd</option>
+                    <label for="groups">grupy</label>
+                    <select multiple name="groups" id="groups">
+                        {% for group in groups %}
+                        <option value="{{ group.slug }}">{{ group.name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="form-field">

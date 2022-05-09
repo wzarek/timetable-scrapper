@@ -1,5 +1,6 @@
 {% load static %}
 {% load mathfilters %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -16,16 +17,33 @@
         <p>menu</p>
     </header>
     <section class='buttons-week'>
-        <form method='post' action="{% url 'homepage' %}">
-            {% csrf_token %}
-            <button title="poprzedni tydzień" type="submit" name="w" value="{{ wNum | add:-1 }}">&#10094;</button>
+        <form method='get' action="{% url 'timetable' %}">
+            <button title="poprzedni tydzień" type="submit" name="week" value="{{ wNum | add:-1 }}">&#10094;</button>
         </form>
-        <form method='post' action="{% url 'homepage' %}">
-            {% csrf_token %}
-            <button title="następny tydzień" type="submit" name="w" value="{{ wNum | add:1 }}">&#10095;</button>
+        <form method='get' action="{% url 'timetable' %}">
+            <button title="następny tydzień" type="submit" name="week" value="{{ wNum | add:1 }}">&#10095;</button>
         </form>
     </section>
     <main>
+        <p class="note">
+            Plan zajęć dla
+            <span class="bold">{{ note }}</span>
+            Wybrane grupy: 
+            <span class="bold">
+            {% for group in groups %}
+                {{ group }}
+            {% endfor %}
+            </span>
+        </p>
+        <p class="note">
+            Ostatnia aktualizacja: 
+            <span class="bold">
+                {% language 'pl' %}
+                {{ updated|date:'D, d N H:i:s' }}
+                {% endlanguage %}
+            </span> 
+            <a href="#">zgłoś błąd</a>
+        </p>
         <section class='hours'>
             {% for h in hours %}
                 <p>{{ h }}</p>
@@ -61,9 +79,8 @@
     </main>
     <footer>
         <p>created by Maciej Krawczyk &copy; <a href="https://wzarek.me">wzarek.me</a></p>
-        <form class='buttons-current' method='post' action="{% url 'homepage' %}">
-            {% csrf_token %}
-            <button type="submit" name="w" value="0">obecny tydzien</button>
+        <form class='buttons-current' method='get' action="{% url 'timetable' %}">
+            <button type="submit" name="week" value="0">obecny tydzien</button>
         </form>
         <a href="{{ filePath }}" download>pobierz iCalendar</a>
     </footer>

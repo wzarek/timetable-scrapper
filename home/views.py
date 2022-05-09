@@ -1,11 +1,11 @@
-from os import read
+import array
+from dataclasses import fields
 from django.shortcuts import render
 from django.views.generic import TemplateView
 import xlrd
 from datetime import date, datetime, time, timedelta
 from icalendar import Calendar, Event
-from tabula import read_pdf
-import numpy as np
+from .models import Field, Group
 
 # Create your views here.
 
@@ -82,7 +82,9 @@ def readPDF():
     # genIcal(arr, 'julka.ics')
     return arr
 
-def uopolski(week):
+def uopolski(fieldSlug : str, week : int, groups : array):
+    last_update = Field.objects.get(slug = fieldSlug).updated
+
     loc = ("sheets/plan-wik.xls")
     wb = xlrd.open_workbook(loc)
     sheet = wb.sheet_by_index(0)
@@ -125,7 +127,10 @@ def uopolski(week):
     # print(labels)
     # print(table)
     filtered = []
-    grupy = ['II', 3, 'cały rok']
+    if len(groups) == 0:
+        groups = ['II', 3, 'cały rok']
+    else:
+        groups.append('cały rok')
 
     for i in range(len(table)):
         if table[i]:
@@ -133,11 +138,11 @@ def uopolski(week):
                 table[i]['grupa'] = int(table[i]['grupa'])
             if type(table[i]['sala']) == float:
                 table[i]['sala'] = int(table[i]['sala'])
-            if table[i]['grupa'] in grupy:
+            if table[i]['grupa'] in groups:
                 filtered.append(table[i])
             elif table[i]['grupa'][:1].strip().isdigit():
                 table[i]['grupa'] == int(table[i]['grupa'][:1])
-                if int(table[i]['grupa'][:1]) in grupy:
+                if int(table[i]['grupa'][:1]) in groups:
                     table[i]['grupa'] = str(table[i]['grupa'][:1])
                     filtered.append(table[i])
 
@@ -186,32 +191,24 @@ def uopolski(week):
             if int(filtered[i]['do'][:2]) > int(end_hour[:2]):
                 end_hour = filtered[i]['do']
 
-    # print(filtered[ending])
-    # print(starting, ending)
     if start_hour != '99:99':
         start_hour = datetime.strptime(start_hour,"%H:%M")
         end_hour = datetime.strptime(end_hour,"%H:%M")
-        # print(datetime.strptime(start_hour,"%H:%M"))
         while start_hour != end_hour:
             hours.append(start_hour.strftime("%H:%M"))
             start_hour = start_hour + timedelta(minutes = 15)
         hours.append(start_hour.strftime("%H:%M"))
-    # print(starting, ending)
 
     filteredWeekdays = {}
     for i in range(5):
-        #print(weekArr[days[i]])
         filteredWeekdays[days[i]] = []
         for j in range(starting,ending+1):
-            #print(filtered[j]['data'])
             if filtered[j]['data'] == weekArr[days[i]]:
                 filteredWeekdays[days[i]].append(filtered[j])
                 #print('masno')
 
     for i in range(5):
-        # print(days[i])
         for j in range(len(filteredWeekdays[days[i]])):
-            # print(filteredWeekdays[days[i]][j])
             if j == 0:
                 diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(hours[0],"%H:%M")).total_seconds()) / (60*15))
                 filteredWeekdays[days[i]][j]['diff'] = diff
@@ -219,15 +216,11 @@ def uopolski(week):
                 diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(filteredWeekdays[days[i]][j-1]['do'],"%H:%M")).total_seconds()) / (60*15))
                 filteredWeekdays[days[i]][j]['diff'] = diff
 
-    # print(filtered[2])
-    #print(filteredWeekdays)
     weekArr.pop(days[5])
     weekArr.pop(days[6])
-    # print(filtered[5])
-    # print(filteredWeekdays)
     iCalPath = 'plan.ics'
     genIcal(filtered, iCalPath)
-    context = {'title': 'plan v0.5', 'today' : today, 'weekday': days[todaysWeekday], 'weekArr': weekArr, 'planFiltered': filteredWeekdays, 'wNum': week, 'hours': hours, 'filePath': 'icals/' + iCalPath}
+    context = {'title': 'plan v0.5', 'today' : today, 'weekday': days[todaysWeekday], 'weekArr': weekArr, 'planFiltered': filteredWeekdays, 'wNum': week, 'hours': hours, 'filePath': 'icals/' + iCalPath, 'groups': groups, 'updated': last_update}
     return context
 
 class timetable(TemplateView):
@@ -235,15 +228,33 @@ class timetable(TemplateView):
     #readPDF()
 
     def get(self, request):
-        context = uopolski(0)
+        try:
+            week = int(request.GET['week'])
+        except:
+            week = 0
+        if request.GET.getlist('groups'):
+            groups = request.GET.getlist('groups')
+            request.session['groups'] = groups
+            request.session.modified = True
+        else:
+            groups = request.session.get('groups', [])
+        if request.GET.get('field'):
+            fieldSlug = request.GET['field']
+            request.session['fieldSlug'] = fieldSlug
+        else:
+            fieldSlug = request.session.get('fieldSlug', 'dietetyka-lic-1rok-stac')
+        field = Field.objects.get(slug = fieldSlug)
+        note = f'{field.name}, {field.year} rok, {field.degree}, {field.type} - {field.university.name}'
+        context = uopolski(fieldSlug, week, groups)
+        context['note'] = note
         return render(request, self.template, context)
 
     def post(self, request):
-        try:
-            week = int(request.POST['w'])
-        except:
-            week = 0
-        context = uopolski(week)
+        groups = []
+        fieldSlug = 'dietetyka-lic-1rok-stac'
+        note = f'(Przykładowy) Dietetyka, 1 rok, licencjackie, stacjonarne - Uniwersytet Opolski'
+        context = uopolski(fieldSlug, 0, groups)
+        context['note'] = note
         return render(request, self.template, context)
 
         # sprawdzenie czy zmienila sie data w porownaniu do poprzedniej, jak tak to przeskakujemy do nastepnej
@@ -252,10 +263,15 @@ class timetable(TemplateView):
 class home(TemplateView):
     template = 'home.html'
 
+
     def get(self, request):
-        context = {'title': 'Timetable scrapper | home'}
+        fields = Field.objects.all().values()
+        groups = Group.objects.all().values()
+        context = {'title': 'Timetable scrapper | home', 'fields': fields, 'groups': groups}
         return render(request, self.template, context)
 
     def post(self, request):
-        context = {'title': 'Timetable scrapper | home'}
+        fields = Field.objects.all().values()
+        groups = Group.objects.all().values()
+        context = {'title': 'Timetable scrapper | home', 'fields': fields, 'groups': groups}
         return render(request, self.template, context)
