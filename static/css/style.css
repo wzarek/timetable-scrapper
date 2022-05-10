@@ -230,7 +230,8 @@ footer {
 
 /* HOMEPAGE */
 
-main#homepage {
+main#homepage,
+main#tutorial {
     width: 70vw;
     display: flex;
     flex-direction: column;
@@ -238,13 +239,15 @@ main#homepage {
     color: white;
 }
 
-main#homepage > section {
+main#homepage > section,
+main#tutorial > section {
     padding: 1em;
     border-inline: 1px solid white;
     font-size: 95%;
 }
 
-main#homepage > section > h2 {
+main#homepage > section > h2,
+main#tutorial > section > h2 {
     padding-bottom: 1.5rem;
     font-size: 1.2rem;
     font-weight: 500;
@@ -314,6 +317,31 @@ main#choose form div button {
     margin: 0;
 }
 
+
+/* PORADNIK */
+
+main#tutorial img {
+    display: block;
+    max-width: 80%;
+    max-height: 35vh;
+    margin-inline: auto;
+    margin-block: 1em;
+    box-shadow: 1em 2em 30px rgba(0, 0, 0, 0.342);
+}
+
+main#tutorial h3 {
+    font-weight: 500;
+    font-size: 1.2rem;
+    margin-bottom: 1em
+}
+
+main#tutorial p {
+    margin-block: 1em;
+}
+
+main#tutorial p:last-of-type {
+    margin-bottom: 0;
+}
 
 /* GLOBAL */
 

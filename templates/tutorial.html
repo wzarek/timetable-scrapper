@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <main id="tutorial">
+        <section id="choosing">
+            <h2>Jak wybrać kierunek i grupę?</h2>
+            <p>
+                Na początku należy udać się na <a href="{% url 'chooser-field' %}">tę</a> stronę. Tam zaczyna się cała przygoda. <br />
+                Zostaniesz poproszony/a o wybranie swojego kierunku z dostępnej listy. <br />
+                <img src="{% static 'img/tutorial/choose-field.jpg' %}" />
+            </p>
+            <p class="note">Jeśli nie umiesz znaleźć swojego kierunku - nie panikuj. Być może nie został on jeszcze dodany. Wyślij o tym informację na maila, a na pewno szybko zostanie to zmienione. </p>
+            <p>
+                Następnie zostaniesz przeniesony/a na stronę z wyborem grupy, tam również trzeba zaznaczyć odpowiadające pola i przejść dalej. <br />
+                <img src="{% static 'img/tutorial/choose-group.jpg' %}" /> <br />
+                Po wybraniu kierunku i grupy przeniesiony/a zostaniesz do swojego planu. <br />
+                <img loading='lazy' src="{% static 'img/tutorial/timetable.jpg' %}" /> <br />
+                Znajdziesz tam informacje o kierunku, wybranych grupach i dacie aktualizacji planu na naszej stronie. <br />
+            </p>
+            <p class="note">Jeśli plan wydaje się być nieaktualny <span class="bold">zgłoś to</span> na podany mail kontaktowy. </p>
+            <p>
+                Do przechodzenia do następnych bądź poprzednich tygodni służą przyciski umieszczone po boku ekranu. <br />
+                <img loading='lazy' src="{% static 'img/tutorial/nextprev-week.jpg' %}" /> <br />
+                Do powrotu do obecnego tygodnia służy przycisk na dole strony. <br />
+                <img loading='lazy' src="{% static 'img/tutorial/this-week.jpg' %}" /> <br />
+            </p>
+        </section>
+        <section id="ics">
+            <h2>Jak dodać plan do swojego kalendarza?</h2>
+            <p class="note">
+                Poradnik przedstawiony dla kalendarza <span class="bold">Google</span> oraz <span class="bold">Apple</span>. Jeśli korzystasz z innych usług postępowanie będzie analogiczne, ale może różnić się szczegółami.
+            </p>
+            <p>
+                Znajdując się na stronie swojego planu w łatwy sposób możesz pobrać plik <span class="bold">.ics</span> i dodać go do swojego kalendarza. <br />
+                Odnośnik do pliku znajduje się na samej dole, w stopce. <br />
+                <img loading='lazy' src="{% static 'img/tutorial/calendar-link.jpg' %}" /> <br />
+            </p>
+            <h3>Google</h3>
+            <p>
+                Aby dodać plik do kalendarza <span class="bold">Google</span> wejdź na <a href="https://calendar.google.com/calendar">tę</a> stronę. <br />
+                Następnie w menu po lewej stronie kliknij <span class="bold">+</span> przy <span class="bold">"Inne kalendarze"</span> <br />
+                <img loading='lazy' src="{% static 'img/tutorial/google-other-cal.jpg' %}" /> <br />
+                Otworzy się menu wyboru, wybierz <span class="bold">"Utwórz nowy kalendarz"</span> <br />
+                Pokaże się okno tworzenia kalendarza. Wybierz odpowiadającą Ci nazwę i kliknij <span class="bold">"Utwórz"</span> <br />
+                <img loading='lazy' src="{% static 'img/tutorial/google-create-cal.jpg' %}" /> <br />
+                Następnie wróć do <a href="https://calendar.google.com/calendar">głównego okna</a>. <br />
+                Ponownie w menu po lewej stronie kliknij <span class="bold">+</span> przy <span class="bold">"Inne kalendarze"</span> <br />
+                Z menu wybierz <span class="bold">"Importuj"</span> <br />
+                Po wyborze otworzy się okno importowania. Kliknij <span class="bold">"Wybierz plik z komputera"</span>, a następnie wybierz plik pobrany ze strony. <br />
+                <img loading='lazy' src="{% static 'img/tutorial/google-import-cal.jpg' %}" /> <br />
+                Kolejnym etapem jest wybranie utworzonego kalendarza w polu <span class="bold">"Dodaj do kalendarza"</span> i naciśnięcie przycisku <span class="bold">"Importuj"</span> <br />
+                Magia! Gdy wrócimy na <a href="https://calendar.google.com/calendar">stronę główną</a> pokaże się nasz kalendarz pod ustaloną wcześniej nazwą.
+            </p>
+        </section>
+        <section id="begin">
+            <h2>Gotowy/a?</h2>
+            <p>
+                kliknij
+                <a href="{% url 'chooser-field' %}">tutaj</a>
+            </p>
+        </section>
+    </main>
+{% endblock content %}
+{% block footer %}
+    <a href="#tutorial">do góry</a>
+    <p>widzisz błąd na stronie? <a href="mailto:contact@wzarek.me">zgłoś to</a></p>
+{% endblock footer %}

@@ -79,7 +79,7 @@ def uopolski(fieldSlug : str, week : int, groups : array):
     filtered = []
     if len(groups) == 0:
         groups = ['II', 3, 'cały rok']
-    else:
+    elif not 'cały rok' in groups:
         groups.append('cały rok')
 
     for i in range(len(table)):
@@ -158,7 +158,7 @@ def uopolski(fieldSlug : str, week : int, groups : array):
 
     weekArr.pop(days[5])
     weekArr.pop(days[6])
-    iCalPath = f'{field_object.slug}.ics'
+    iCalPath = f'{field_object.slug}-grupy-{"-".join(groups[:-1])}.ics'
     genIcal(filtered, iCalPath)
     context = {'title': 'plan v0.5', 'today' : today, 'weekday': days[todaysWeekday], 'weekArr': weekArr, 'planFiltered': filteredWeekdays, 'wNum': week, 'hours': hours, 'filePath': 'icals/' + iCalPath, 'groups': groups, 'field': field_object}
     return context
@@ -190,8 +190,7 @@ class timetable(TemplateView):
             context = uopolski(fieldSlug, week, groups)
         except:
             raise Http404
-
-        
+      
         context['note'] = note
         context['headertitle'] = f'dzisiaj jest  {context["weekday"]}, {context["today"]}'
         return render(request, self.template, context)
@@ -244,3 +243,12 @@ class chooseGroup(TemplateView):
         return render(request, self.template, self.context)
     def post(self, request):
         raise Http404
+
+class tutorial(TemplateView):
+    template = 'tutorial.html'
+    context = {'title': 'Timetable scrapper | poradnik', 'headertitle': 'jak zacząć?'}
+
+    def get(self, request):
+        return render(request, self.template, self.context)
+    def post(self, request):
+        return render(request, self.template, self.context)
