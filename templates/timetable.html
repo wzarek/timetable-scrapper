@@ -2,6 +2,16 @@
 {% load static %}
 {% load mathfilters %}
 {% load i18n %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/data.css' %}">
+{% endblock styles %}
+
+{% block scripts %}
+    <script src="{% static 'js/inViewportCheck.js' %}" defer></script>
+    <script src="{% static 'js/showFullClass.js' %}" defer></script>
+{% endblock scripts %}
+
 {% block content %}
     <section class='buttons-week'>
         <form method='get' action="{% url 'timetable' %}">
@@ -35,36 +45,51 @@
             </span> 
             <a href="mailto:contact@wzarek.me">zgłoś błąd</a>
         </p>
-        <section class='hours'>
-            {% for h in hours %}
-                <p>{{ h }}</p>
-            {% endfor %}
-        </section>
-        <section class='timetable'>
-            <section class="weekdays">
-                {% for key, day in weekArr.items %}
-                    <div class="day-single {%if today == day %}today{%endif%}">
-                        <p>{{ key }}</p>
-                        <span>{{ day }}</span>
-                    </div>
+        <section class="timetable-container">
+            <section class='hours'>
+                {% for h in hours %}
+                    <p>{{ h }}</p>
                 {% endfor %}
             </section>
-            <section class='plan'>
-                {% for key, var in planFiltered.items %}
-                    <section class='plan-day'>
-                        {% for k in var %}
-                        <div data-masno='{{ k.dlugosc }}' style='height: {{ k.dlugosc | mul:3 |floatformat:2 }}vh; margin-top: {{ k.diff | mul:3 |floatformat:2 }}vh;' class='plan-single {%if today == k.data %}today{%endif%}'>
-                            <span>{{ k.od }} - {{ k.do }}</span>
-                            <h4>{{ k.przedmiot }}</h4>
-                            <p>{{ k.stopien }} {{ k.imie }} {{ k.nazwisko }}</p>
-                            <p>sala: {{ k.sala }}</p>
-                            <p>gr.: {{ k.grupa }}</p>
-                        </div>
-                        {% empty %}
-                        <div class="empty"></div>
-                        {% endfor %}
-                    </section>
+            <section class='hours-fixed hours'>
+                {% for h in hours %}
+                    <p>{{ h }}</p>
                 {% endfor %}
+            </section>
+            <section class='timetable'>
+                <section class="weekdays">
+                    {% for key, day in weekArr.items %}
+                        <div class="day-single {%if today == day %}today{%endif%}">
+                            <p>{{ key }}</p>
+                            <span>{{ day }}</span>
+                        </div>
+                    {% endfor %}
+                </section>
+                <section class="weekdays-fixed weekdays">
+                    {% for key, day in weekArr.items %}
+                        <div class="day-single {%if today == day %}today{%endif%}">
+                            <p>{{ key }}</p>
+                            <span>{{ day }}</span>
+                        </div>
+                    {% endfor %}
+                </section>
+                <section class='plan'>
+                    {% for key, var in planFiltered.items %}
+                        <section class='plan-day'>
+                            {% for k in var %}
+                            <div data-height='{{ k.dlugosc }}' data-diff="{{ k.diff }}" class='plan-single {%if today == k.data %}today{%endif%}'>
+                                <span>{{ k.od }} - {{ k.do }}</span>
+                                <h4>{{ k.przedmiot }}</h4>
+                                <p>{{ k.stopien }} {{ k.imie }} {{ k.nazwisko }}</p>
+                                <p>sala: {{ k.sala }}</p>
+                                <p>gr.: {{ k.grupa }}</p>
+                            </div>
+                            {% empty %}
+                            <div class="empty"></div>
+                            {% endfor %}
+                        </section>
+                    {% endfor %}
+                </section>
             </section>
         </section>
     </main>

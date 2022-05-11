@@ -1,6 +1,7 @@
 import array
 from dataclasses import field, fields
 from pipes import Template
+from sys import argv
 from tokenize import group
 from django.shortcuts import render
 from django.views.generic import TemplateView
@@ -29,7 +30,7 @@ def genIcal(arr, name):
         time = datetime.strptime(row['do'],"%H:%M").time()
         combined = datetime.combine(date, time)
         event.add('dtend', combined)
-        desc = row['stopien'] + " " + row['imie'] + " " + row['nazwisko']
+        desc = row['prowadzacy']
         event.add('description', desc)
         if 'sala' in row.keys():
             event.add('location', row['sala'].replace('.0', ''))
@@ -155,6 +156,9 @@ def uopolski(fieldSlug : str, week : int, groups : array):
             else:
                 diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(filteredWeekdays[days[i]][j-1]['do'],"%H:%M")).total_seconds()) / (60*15))
                 filteredWeekdays[days[i]][j]['diff'] = diff
+    
+    for row in filtered:
+        row['prowadzacy'] = row['stopien'] + " " + row['imie'] + " " + row['nazwisko']
 
     weekArr.pop(days[5])
     weekArr.pop(days[6])
@@ -247,6 +251,33 @@ class chooseGroup(TemplateView):
 class tutorial(TemplateView):
     template = 'tutorial.html'
     context = {'title': 'Timetable scrapper | poradnik', 'headertitle': 'jak zacząć?'}
+
+    def get(self, request):
+        return render(request, self.template, self.context)
+    def post(self, request):
+        return render(request, self.template, self.context)
+
+class error400(TemplateView):
+    template = 'error.html'
+    context = {'error': '400 Bad Request', 'errordesc': 'Podany URL nie został odnaleziony na serwerze.'}
+
+    def get(self, request):
+        return render(request, self.template, self.context)
+    def post(self, request):
+        return render(request, self.template, self.context)
+
+class error403(TemplateView):
+    template = 'error.html'
+    context = {'error': '403 Forbidden', 'errordesc': 'Brak uprawnień do przeglądania podanego adresu.'}
+
+    def get(self, request):
+        return render(request, self.template, self.context)
+    def post(self, request):
+        return render(request, self.template, self.context)
+
+class error404(TemplateView):
+    template = 'error.html'
+    context = {'error': '404 Not Found', 'errordesc': 'Podana strona nie została odnaleziona. Sprawdź podany link bądź wróć do formularza i uzupełnij go ponownie.'}
 
     def get(self, request):
         return render(request, self.template, self.context)

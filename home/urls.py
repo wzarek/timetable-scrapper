@@ -1,5 +1,6 @@
 from . import views
 from django.urls import path
+from django.conf.urls import handler400, handler403, handler404, handler500
 
 urlpatterns = [
     path('', views.home.as_view(), name="homepage"),

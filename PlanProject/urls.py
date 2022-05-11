@@ -19,7 +19,14 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.conf.urls import handler400, handler403, handler404, handler500
+from home import views
+
 urlpatterns = [
     path('', include('home.urls')),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+
+handler400 = views.error400.as_view()
+handler403 = views.error403.as_view()
+handler404 = views.error404.as_view()

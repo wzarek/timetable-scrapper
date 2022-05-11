@@ -1,0 +1,176 @@
+@media only screen and (max-width: 1200px) {
+    :root {
+        --timetable-width: 75vw;
+        --main-width: 90vw;
+    }
+
+    main,
+    main#homepage {
+        width: var(--main-width);
+    }
+
+    .timetable {
+        width: var(--timetable-width);
+    }
+
+    .plan-single {
+        font-size: .7rem;
+    }
+
+    .hours p {
+        font-size: .6rem;
+    }
+
+    footer {
+        font-size: .8rem;
+    }
+} 
+
+@media only screen and (max-width: 900px) {
+    :root {
+        --timetable-width: 80vw;
+    }
+
+    main {
+        margin-top: 3vh;
+    }
+
+    header, footer {
+        width: 100vw;
+    }
+
+    .buttons-week button {
+        padding: .75rem .5rem;
+    }
+
+    .timetable {
+        width: var(--timetable-width);
+    }
+
+    .day-single {
+        font-size: .8rem;
+    }
+
+    .plan-single {
+        font-size: .7rem;
+    }
+
+    .hours p {
+        font-size: .6rem;
+    }
+
+    footer {
+        grid-template-columns: 2fr 1fr 2fr;
+    }
+} 
+
+@media only screen and (max-width: 700px) {
+    :root {
+        --timetable-width: 80vw;
+    }
+
+    header, footer {
+        font-size: .7rem;
+    }
+
+    header {
+        grid-template-columns: 2fr 3fr 2fr;
+    }
+
+    header h1 {
+        font-size: 1rem;
+    }
+
+    main#choose form {
+        width: 100%;
+    }
+
+    .buttons-week button {
+        padding: .75rem .5rem;
+    }
+
+    .timetable {
+        width: var(--timetable-width);
+    }
+
+    .day-single {
+        font-size: .7rem;
+    }
+
+    .plan-single {
+        font-size: .7rem;
+        height: calc(var(--height) * 1.5rem);
+        margin-top: calc(var(--diff) * 1.5rem);
+    }
+
+    .hours p {
+        font-size: .6rem;
+        line-height: 1.5rem;
+    }
+} 
+
+@media only screen and (max-width: 600px) {
+    :root {
+        --timetable-width: 120vw;
+        --hours-width: 10vw;
+    }
+
+    main {
+        overflow-x: scroll;
+    }
+
+    main#timetable .form-groups {
+        justify-content: center;
+    }
+
+    .timetable-container {
+        width: fit-content;
+        overflow-x: scroll;
+    }
+
+    header, footer {
+        font-size: .7rem;
+    }
+
+    header {
+        grid-template-columns: 2fr 3fr 2fr;
+    }
+
+    header h1 {
+        font-size: 1rem;
+    }
+
+    .buttons-week button {
+        padding: .75rem .5rem;
+    }
+
+    .timetable {
+        width: var(--timetable-width);
+    }
+
+    .day-single {
+        font-size: .7rem;
+    }
+
+    .plan-single {
+        font-size: .7rem;
+        height: calc(var(--height) * 1.5rem);
+        margin-top: calc(var(--diff) * 1.5rem);
+    }
+
+    .hours {
+        width: var(--hours-width);
+    }
+
+    .hours p {
+        width: var(--hours-width);
+    }
+
+    footer p {
+        text-align: center;
+    }
+
+    footer a {
+        display: block;
+    }
+} 
