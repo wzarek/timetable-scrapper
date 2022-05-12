@@ -33,6 +33,7 @@ body {
     color: white;
     overflow-x: hidden;
     overflow-y: scroll;
+    scroll-behavior: smooth;
 }
 
 .weekdays.weekdays-fixed {
@@ -88,6 +89,45 @@ header svg {
     cursor: pointer;
     padding: .25em;
 }
+
+header nav {
+    position: fixed;
+    right: -100%;
+    top: 0;
+    height: 100vh;
+    width: 25vw;
+    background-color: rgba(255, 255, 255, .95);
+    transition: right .35s 0s ease-out;
+}
+
+header nav svg {
+    cursor: pointer;
+    width: 2.5rem;
+    height: 2.5rem;
+    fill: black;
+    margin-left: 1vw;
+    margin-top: 1vw;
+}
+
+header nav ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    list-style: none;
+    height: 50%;
+    padding-left: 2vw;
+}
+
+header nav ul li a {
+    color: black;
+}
+
+header nav ul li.active-link a {
+    color: var(--accent-color);
+    font-weight: 500;
+}
+
 
 /* MAIN */
 
@@ -294,7 +334,8 @@ footer {
 /* HOMEPAGE */
 
 main#homepage,
-main#tutorial {
+main#tutorial,
+main#about {
     width: 70vw;
     display: flex;
     flex-direction: column;
@@ -303,14 +344,16 @@ main#tutorial {
 }
 
 main#homepage > section,
-main#tutorial > section {
+main#tutorial > section,
+main#about > section {
     padding: 1em;
     border-inline: 1px solid white;
     font-size: 95%;
 }
 
 main#homepage > section > h2,
-main#tutorial > section > h2 {
+main#tutorial > section > h2,
+main#about > section > h2 {
     padding-bottom: 1.5rem;
     font-size: 1.2rem;
     font-weight: 500;
@@ -393,7 +436,8 @@ main#tutorial img {
     box-shadow: 1em 2em 30px rgba(0, 0, 0, 0.342);
 }
 
-main#tutorial h3 {
+main#tutorial h3,
+main#about h3 {
     font-weight: 500;
     font-size: 1.2rem;
     margin-bottom: 1em

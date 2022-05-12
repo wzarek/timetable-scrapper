@@ -5,7 +5,9 @@
     }
 
     main,
-    main#homepage {
+    main#homepage,
+    main#tutorial,
+    main#about {
         width: var(--main-width);
     }
 
@@ -117,6 +119,10 @@
 
     main {
         overflow-x: scroll;
+    }
+    
+    p.note {
+        width: 90%;
     }
 
     main#timetable .form-groups {

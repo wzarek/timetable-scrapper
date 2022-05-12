@@ -9,7 +9,7 @@
                 Zostaniesz poproszony/a o wybranie swojego kierunku z dostępnej listy. <br />
                 <img src="{% static 'img/tutorial/choose-field.jpg' %}" />
             </p>
-            <p class="note">Jeśli nie umiesz znaleźć swojego kierunku - nie panikuj. Być może nie został on jeszcze dodany. Wyślij o tym informację na maila, a na pewno szybko zostanie to zmienione. </p>
+            <p class="note">Jeśli nie umiesz znaleźć swojego kierunku - nie panikuj. Być może nie został on jeszcze dodany. Wyślij o tym informację na <a href="mailto:contact@wzarek.me">maila</a>, a na pewno szybko zostanie to zmienione. </p>
             <p>
                 Następnie zostaniesz przeniesony/a na stronę z wyborem grupy, tam również trzeba zaznaczyć odpowiadające pola i przejść dalej. <br />
                 <img src="{% static 'img/tutorial/choose-group.jpg' %}" /> <br />
@@ -17,7 +17,7 @@
                 <img loading='lazy' src="{% static 'img/tutorial/timetable.jpg' %}" /> <br />
                 Znajdziesz tam informacje o kierunku, wybranych grupach i dacie aktualizacji planu na naszej stronie. <br />
             </p>
-            <p class="note">Jeśli plan wydaje się być nieaktualny <span class="bold">zgłoś to</span> na podany mail kontaktowy. </p>
+            <p class="note">Jeśli plan wydaje się być nieaktualny <span class="bold">zgłoś to</span> na podany <a href="mailto:contact@wzarek.me">mail kontaktowy</a>. </p>
             <p>
                 Do przechodzenia do następnych bądź poprzednich tygodni służą przyciski umieszczone po boku ekranu. <br />
                 <img loading='lazy' src="{% static 'img/tutorial/nextprev-week.jpg' %}" /> <br />
@@ -37,19 +37,33 @@
             </p>
             <h3>Google</h3>
             <p>
-                Aby dodać plik do kalendarza <span class="bold">Google</span> wejdź na <a href="https://calendar.google.com/calendar">tę</a> stronę. <br />
-                Następnie w menu po lewej stronie kliknij <span class="bold">+</span> przy <span class="bold">"Inne kalendarze"</span> <br />
+                Aby dodać plik do kalendarza <span class="bold">Google</span> wejdź na <a target="_blank" href="https://calendar.google.com/calendar">tę</a> stronę. <br />
+                Następnie w menu po lewej stronie kliknij <span class="bold">+</span> przy <span class="bold">"Inne kalendarze"</span>. <br />
                 <img loading='lazy' src="{% static 'img/tutorial/google-other-cal.jpg' %}" /> <br />
-                Otworzy się menu wyboru, wybierz <span class="bold">"Utwórz nowy kalendarz"</span> <br />
-                Pokaże się okno tworzenia kalendarza. Wybierz odpowiadającą Ci nazwę i kliknij <span class="bold">"Utwórz"</span> <br />
+                Otworzy się menu wyboru, wybierz <span class="bold">"Utwórz nowy kalendarz"</span>. <br />
+                Pokaże się okno tworzenia kalendarza. Wybierz odpowiadającą Ci nazwę i kliknij <span class="bold">"Utwórz"</span>. <br />
                 <img loading='lazy' src="{% static 'img/tutorial/google-create-cal.jpg' %}" /> <br />
-                Następnie wróć do <a href="https://calendar.google.com/calendar">głównego okna</a>. <br />
-                Ponownie w menu po lewej stronie kliknij <span class="bold">+</span> przy <span class="bold">"Inne kalendarze"</span> <br />
+                Następnie wróć do <a target="_blank" href="https://calendar.google.com/calendar">głównego okna</a>. <br />
+                Ponownie w menu po lewej stronie kliknij <span class="bold">+</span> przy <span class="bold">"Inne kalendarze"</span>. <br />
                 Z menu wybierz <span class="bold">"Importuj"</span> <br />
                 Po wyborze otworzy się okno importowania. Kliknij <span class="bold">"Wybierz plik z komputera"</span>, a następnie wybierz plik pobrany ze strony. <br />
                 <img loading='lazy' src="{% static 'img/tutorial/google-import-cal.jpg' %}" /> <br />
-                Kolejnym etapem jest wybranie utworzonego kalendarza w polu <span class="bold">"Dodaj do kalendarza"</span> i naciśnięcie przycisku <span class="bold">"Importuj"</span> <br />
-                Magia! Gdy wrócimy na <a href="https://calendar.google.com/calendar">stronę główną</a> pokaże się nasz kalendarz pod ustaloną wcześniej nazwą.
+                Kolejnym etapem jest wybranie utworzonego kalendarza w polu <span class="bold">"Dodaj do kalendarza"</span> i naciśnięcie przycisku <span class="bold">"Importuj"</span>. <br />
+                Magia! Gdy wrócimy na <a target="_blank" href="https://calendar.google.com/calendar">stronę główną</a> pokaże się nasz kalendarz pod ustaloną wcześniej nazwą.
+            </p>
+            <h3>Apple</h3>
+            <p>
+                Aby dodać plik do kalendarza <span class="bold">Apple</span> na swoim Macu pobierz kalendarz i uruchom plik. <br />
+                Następnie rozpocznie się proces <span class="bold">importowania</span>. <br />
+                <img loading='lazy' src="{% static 'img/tutorial/apple-importing-cal.jpg' %}" /> <br />
+                Następnie w opcji wyboru kalendarza wybierz <span class="bold">"Nowy kalendarz"</span>. <br />
+                <img loading='lazy' src="{% static 'img/tutorial/apple-new-cal.jpg' %}" /> <br />
+                Następnie kliknij <span class="bold">"Ok"</span>. Kalendarz automatycznie zostanie zaimportowany o domyślnej ustalonej przez nas nazwie <span class="bold">"Plan zajec"</span>. <br />
+                Aby zmienić nazwę należy rozwinąć menu po lewej stronie, kliknąć <span class="bold">prawym przyciskiem myszy</span> na utworzony kalendarz i wybrać <span class="bold">pierwszą</span> opcję. <br />
+                <img loading='lazy' src="{% static 'img/tutorial/apple-edit-cal.jpg' %}" /> <br />
+                Otworzy się okno edycji kalendarza. Możemy zmienić jego nazwę, kolor, a nawet opis. <br />
+                <img loading='lazy' src="{% static 'img/tutorial/apple-rename-cal.jpg' %}" /> <br />
+                Po zatwierdzeniu zmian nasz plan zajęć powinien już widnieć w kalendarzu pod wybraną przez Ciebie nazwą.
             </p>
         </section>
         <section id="begin">

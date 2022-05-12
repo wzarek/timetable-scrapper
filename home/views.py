@@ -164,7 +164,7 @@ def uopolski(fieldSlug : str, week : int, groups : array):
     weekArr.pop(days[6])
     iCalPath = f'{field_object.slug}-grupy-{"-".join(groups[:-1])}.ics'
     genIcal(filtered, iCalPath)
-    context = {'title': 'plan v0.5', 'today' : today, 'weekday': days[todaysWeekday], 'weekArr': weekArr, 'planFiltered': filteredWeekdays, 'wNum': week, 'hours': hours, 'filePath': 'icals/' + iCalPath, 'groups': groups, 'field': field_object}
+    context = {'title': f'Timetable scrapper | {field_object.name}, {field_object.year} rok, {field_object.degree}, {field_object.type} gr.: {" ".join(groups[:-1])}', 'today' : today, 'weekday': days[todaysWeekday], 'weekArr': weekArr, 'planFiltered': filteredWeekdays, 'wNum': week, 'hours': hours, 'filePath': 'icals/' + iCalPath, 'groups': groups, 'field': field_object}
     return context
 
 class timetable(TemplateView):
@@ -251,6 +251,15 @@ class chooseGroup(TemplateView):
 class tutorial(TemplateView):
     template = 'tutorial.html'
     context = {'title': 'Timetable scrapper | poradnik', 'headertitle': 'jak zacząć?'}
+
+    def get(self, request):
+        return render(request, self.template, self.context)
+    def post(self, request):
+        return render(request, self.template, self.context)
+
+class about(TemplateView):
+    template = 'about.html'
+    context = {'title': 'Timetable scrapper | o nas'}
 
     def get(self, request):
         return render(request, self.template, self.context)
