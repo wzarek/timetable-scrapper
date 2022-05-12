@@ -19,6 +19,10 @@
         font-size: .7rem;
     }
 
+    .plan-single h3 {
+        font-size: .75rem;
+    }
+
     .hours p {
         font-size: .6rem;
     }
@@ -103,6 +107,10 @@
         font-size: .7rem;
         height: calc(var(--height) * 1.5rem);
         margin-top: calc(var(--diff) * 1.5rem);
+    }
+
+    .plan-single h3 {
+        font-size: .7rem;
     }
 
     .hours p {

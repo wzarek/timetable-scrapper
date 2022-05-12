@@ -98,6 +98,7 @@ header nav {
     width: 25vw;
     background-color: rgba(255, 255, 255, .95);
     transition: right .35s 0s ease-out;
+    z-index: 99;
 }
 
 header nav svg {
@@ -185,9 +186,10 @@ main#timetable .form-groups {
     border-radius: 1em;
 }
 
-.plan-single h4 {
+.plan-single h3 {
     font-weight: 500;
     margin-bottom: 1vh;
+    font-size: .9rem;
 }
 
 .plan-single.plan-full {

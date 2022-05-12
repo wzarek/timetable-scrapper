@@ -45,6 +45,9 @@
             </span> 
             <a href="mailto:contact@wzarek.me">zgłoś błąd</a>
         </p>
+        <p class="note">
+            Jeśli nie widać wszystkich informacji na kafelku - <span class="bold">kliknij</span> na niego, rozwinie się cały.
+        </p>
         <section class="timetable-container">
             <section class='hours'>
                 {% for h in hours %}
@@ -79,7 +82,7 @@
                             {% for k in var %}
                             <div data-height='{{ k.dlugosc }}' data-diff="{{ k.diff }}" class='plan-single {%if today == k.data %}today{%endif%}'>
                                 <span>{{ k.od }} - {{ k.do }}</span>
-                                <h4>{{ k.przedmiot }}</h4>
+                                <h3>{{ k.przedmiot }}</h3>
                                 <p>{{ k.stopien }} {{ k.imie }} {{ k.nazwisko }}</p>
                                 <p>sala: {{ k.sala }}</p>
                                 <p>gr.: {{ k.grupa }}</p>
