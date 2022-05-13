@@ -3,10 +3,11 @@ function mobileCheck() {
     return false;
 };
 
+function macOsCheck() {
+  if (navigator.userAgent.toUpperCase().indexOf('MAC')>=0) return true;
+  return false;
+}
 
-{/* <p class="note">
-            Aby wybrać więcej niż jedną grupę należy <span class="bold">przytrzymać</span> klawisz <span class="bold">ctrl</span> podczas wybierania.
-        </p> */}
 if (window.location.href.indexOf("wybierz-grupe") > -1) {
   const groupForm = document.querySelector('main#choose form');
   const formButton = document.querySelector('div.form-field:last-child');
@@ -14,9 +15,11 @@ if (window.location.href.indexOf("wybierz-grupe") > -1) {
   if (!mobileCheck()) {
     let note = document.createElement('p');
     note.classList.add('note');
-    note.innerHTML = 'Aby wybrać więcej niż jedną grupę należy <span class="bold">przytrzymać</span> klawisz <span class="bold">ctrl</span> podczas wybierania.';
+    if(!macOsCheck()){
+      note.innerHTML = 'Aby wybrać więcej niż jedną grupę należy <span class="bold">przytrzymać</span> klawisz <span class="bold">ctrl</span> podczas wybierania.';
+    } else {
+      note.innerHTML = 'Aby wybrać więcej niż jedną grupę należy <span class="bold">przytrzymać</span> klawisz <span class="bold">command</span> podczas wybierania.';
+    }
     groupForm.insertBefore(note, formButton);
   }
-} else if(window.location.href.indexOf("poradnik") > -1) {
-  
 }

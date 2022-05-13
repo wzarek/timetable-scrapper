@@ -82,21 +82,22 @@ def uopolski(fieldSlug : str, week : int, groups : array):
         groups = ['II', 3, 'cały rok']
     elif not 'cały rok' in groups:
         groups.append('cały rok')
+    elif not 'caly rok' in groups:
+        groups.append('caly rok')
 
     for i in range(len(table)):
         if table[i]:
             if type(table[i]['grupa']) == float:
                 table[i]['grupa'] = int(table[i]['grupa'])
-            if type(table[i]['sala']) == float:
-                table[i]['sala'] = int(table[i]['sala'])
-            if table[i]['grupa'] in groups:
+            if table[i]['sala'][:-2].strip().isdigit():
+                table[i]['sala'] = str(table[i]['sala'])[:-2]
+            if str(table[i]['grupa']).strip() in groups:
                 filtered.append(table[i])
-            elif table[i]['grupa'][:1].strip().isdigit():
-                table[i]['grupa'] == int(table[i]['grupa'][:1])
-                if int(table[i]['grupa'][:1]) in groups:
-                    table[i]['grupa'] = str(table[i]['grupa'][:1])
+            elif str(table[i]['grupa'])[:1].strip().isdigit():
+                table[i]['grupa'] = int(table[i]['grupa'][:1])
+                if str(table[i]['grupa'])[:1] in groups:
+                    table[i]['grupa'] = str(table[i]['grupa'])[:1]
                     filtered.append(table[i])
-
     weekArr = {}
     days = ['poniedziałek', 'wtorek', 'środa', 'czwartek', 'piątek', 'sobota', 'niedziela']
     today = datetime.now()
@@ -188,12 +189,13 @@ class timetable(TemplateView):
             request.session['fieldSlug'] = fieldSlug
         else:
             fieldSlug = request.session.get('fieldSlug', 'dietetyka-lic-1rok-stac')
-        try:
-            field = Field.objects.get(slug = fieldSlug)
-            note = f'{field.name}, {field.year} rok, {field.degree}, {field.type} - {field.university.name}'
-            context = uopolski(fieldSlug, week, groups)
-        except:
-            raise Http404
+
+        #try:
+        field = Field.objects.get(slug = fieldSlug)
+        note = f'{field.name}, {field.year} rok, {field.degree}, {field.type} - {field.university.name}'
+        context = uopolski(fieldSlug, week, groups)
+        # except:
+        #     pass
       
         context['note'] = note
         context['headertitle'] = f'dzisiaj jest  {context["weekday"]}, {context["today"]}'
@@ -240,7 +242,7 @@ class chooseGroup(TemplateView):
             field = request.GET['field']
         except:
             raise Http404
-        groups = Group.objects.filter(field__slug = field).values()
+        groups = Group.objects.filter(fields__slug = field).values()
         field = Field.objects.get(slug = field)
         self.context['groups'] = groups
         self.context['field'] = field

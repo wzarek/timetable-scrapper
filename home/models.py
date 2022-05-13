@@ -34,7 +34,7 @@ class Field(models.Model):
 
 class Group(models.Model):
     name = models.CharField(max_length=100)
-    field = models.ForeignKey(Field, on_delete=models.CASCADE)
+    fields = models.ManyToManyField(Field)
     university = models.ForeignKey(University, on_delete=models.CASCADE)
     slug = models.SlugField()
 
