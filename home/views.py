@@ -225,6 +225,11 @@ class home(TemplateView):
 
 class chooseField(TemplateView):
     template = 'fieldchooser.html'
+    parentFields = Field.objects.filter(parent__isnull = True).values()
+    fieldsFiltered = {}
+    for p in parentFields:
+        fieldsFiltered[p['name']] = Field.objects.filter(parent__slug = p['slug']).values()
+    print(fieldsFiltered)
     fields = Field.objects.all().values()
     context = {'title': 'Timetable scrapper | wybierz kierunek', 'headertitle': 'wybierz odpowiadający plan', 'fields': fields}
 
