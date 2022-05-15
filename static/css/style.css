@@ -395,6 +395,20 @@ main#choose form div select {
     color: black;
 }
 
+main#choose form div select optgroup {
+    background-color: rgba(207, 207, 207, 0.8);
+    font-weight: 500;
+}
+
+main#choose form div select option[disabled] {
+    border: none;
+    border-radius: 1em;
+    color: black;
+    font-weight: 500;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
 main#choose form div select:focus {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;

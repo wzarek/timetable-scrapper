@@ -5,9 +5,14 @@
     <form method='get' action="{% url 'chooser-group' %}">
         <div class="form-field">
             <label for="field">kierunek</label>
-            <select name="field" id="field">
-                {% for field in fields %}
-                <option value="{{ field.slug }}">{{ field.name }}, {{ field.year }} rok, {{ field.degree }}, {{ field.type }}</option>
+            <select name="field" id="field" required>
+                <option disabled aria-label="Wydział nauk o zdrowiu">Wydział nauk o zdrowiu</option>
+                {% for key, value in fieldsFiltered.items %}
+                    <optgroup label="{{ key }}">
+                        {% for field in value %}
+                            <option value="{{ field.slug }}">{{ field.name }}, {{ field.year }} rok, {{ field.degree }}, {{ field.type }}</option>
+                        {% endfor %}
+                    </optgroup>
                 {% endfor %}
             </select>
         </div>

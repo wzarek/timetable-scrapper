@@ -229,9 +229,7 @@ class chooseField(TemplateView):
     fieldsFiltered = {}
     for p in parentFields:
         fieldsFiltered[p['name']] = Field.objects.filter(parent__slug = p['slug']).values()
-    print(fieldsFiltered)
-    fields = Field.objects.all().values()
-    context = {'title': 'Timetable scrapper | wybierz kierunek', 'headertitle': 'wybierz odpowiadający plan', 'fields': fields}
+    context = {'title': 'Timetable scrapper | wybierz kierunek', 'headertitle': 'wybierz odpowiadający plan', 'fieldsFiltered': fieldsFiltered}
 
     def get(self, request):
         return render(request, self.template, self.context)
