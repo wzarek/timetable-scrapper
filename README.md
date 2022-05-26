@@ -17,3 +17,9 @@ Then it's filtered by chosen groups, parsed to ical file and shown on the screen
 
 ## University of Lower Silesia
 Thanks to [raczu](https://github.com/raczu) and his [project](https://github.com/raczu/DSW-schedule-scrapper) now we can implement timetable views for University of Lower Silesia.
+
+## Screenshots
+![home](https://firebasestorage.googleapis.com/v0/b/portfolio-web-dev-bed65.appspot.com/o/images%2Ftimetable-scrapper%2FtimetableScrapper-1.jpg?alt=media&token=5141dd2a-1e92-4b13-9ccc-56b7a60cc993)
+![group choosing](https://firebasestorage.googleapis.com/v0/b/portfolio-web-dev-bed65.appspot.com/o/images%2Ftimetable-scrapper%2FtimetableScrapper-2.jpg?alt=media&token=85acaedd-fa0e-4ead-b63e-bff48a8fe953)
+![timetable](https://firebasestorage.googleapis.com/v0/b/portfolio-web-dev-bed65.appspot.com/o/images%2Ftimetable-scrapper%2FtimetableScrapper-3.jpg?alt=media&token=77a6c6c2-139e-43e7-99d8-165968b1bc48)
+![tutorial](https://firebasestorage.googleapis.com/v0/b/portfolio-web-dev-bed65.appspot.com/o/images%2Ftimetable-scrapper%2FtimetableScrapper-4.jpg?alt=media&token=b37b3546-3173-4663-b05d-487291c98e18)
