@@ -3,15 +3,15 @@ from dataclasses import field, fields
 from pipes import Template
 from sys import argv
 from tokenize import group
+from turtle import update
+from xmlrpc.client import DateTime
 from django.shortcuts import render
 from django.views.generic import TemplateView
 import xlrd
 from datetime import date, datetime, time, timedelta
 from icalendar import Calendar, Event
 from .models import Field, Group
-from django.http import Http404
-
-# Create your views here.
+from django.http import Http404, JsonResponse
 
 def genIcal(arr, name):
     # X-WR-CALNAME:katanaforumps2@gmail.com
@@ -217,6 +217,7 @@ class home(TemplateView):
     template = 'home.html'
     context = {'title': 'Timetable scrapper | home', 'headertitle': 'narzędzie do upraszczania planu zajęć'}
 
+
     def get(self, request): 
         return render(request, self.template, self.context)
 
@@ -299,3 +300,41 @@ class error404(TemplateView):
         return render(request, self.template, self.context)
     def post(self, request):
         return render(request, self.template, self.context)
+
+class getFieldsToUpdate(TemplateView):
+
+    def get(self, request):
+        timestamp = datetime.now()
+        fields = Field.objects.filter(parent__isnull = False).values()
+        fieldsToSend = []
+        for field in fields:
+            fieldsToSend.append({'slug': field['slug'], 'link': field['root_link'], 'xpath': field['x_path'], 'filename': field['file']})
+        return JsonResponse({'fields': fieldsToSend, 'date': timestamp})
+
+    def post(self, request):
+        raise Http404
+
+class updateField(TemplateView):
+
+    def get(self, request):
+        isSuccess = True
+
+        try:
+            requestedSlug = request.GET['slug']
+            requestedFileName = request.GET['file']
+            requestedLink = request.GET['link']
+        except:
+            return JsonResponse({'success': False})
+        
+        try:
+            field = Field.objects.get(slug = requestedSlug)
+            field.file = f'sheets/{str(requestedFileName)}'
+            field.link = requestedLink
+            field.updated = datetime.now()
+            field.save()
+        except Exception:
+            isSuccess = False
+        return JsonResponse({'success': isSuccess})
+
+    def post(self, request):
+        raise Http404

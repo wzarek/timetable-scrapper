@@ -1,6 +1,7 @@
 from pyexpat import model
 from re import L
 from turtle import ondrag
+from unittest.util import _MAX_LENGTH
 from django.db import models
 import os
 
@@ -20,6 +21,7 @@ class Field(models.Model):
     degree = models.CharField(max_length=100, blank=True)
     year = models.IntegerField(null=True, blank=True)
     type = models.CharField(max_length=50, blank=True)
+    x_path = models.CharField(max_length=150, blank=True, null=True)
     root_link = models.URLField()
     link = models.URLField(blank=True)
     file = models.FileField(upload_to='sheets/', blank=True)

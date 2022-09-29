@@ -8,5 +8,7 @@ urlpatterns = [
     path('wybierz-kierunek', views.chooseField.as_view(), name="chooser-field"),
     path('wybierz-grupe', views.chooseGroup.as_view(), name="chooser-group"),
     path('poradnik', views.tutorial.as_view(), name="tutorial"),
-    path('o-nas', views.about.as_view(), name="about")
+    path('o-nas', views.about.as_view(), name="about"),
+    path('api/get-fields', views.getFieldsToUpdate.as_view(), name="api-get-fields"),
+    path('api/change-field', views.updateField.as_view(), name="api-change-field"),
 ]

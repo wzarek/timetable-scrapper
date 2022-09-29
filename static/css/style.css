@@ -454,6 +454,12 @@ main#tutorial p:last-of-type {
     margin-bottom: 0;
 }
 
+.header-sticky {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 10px;
+}
+
 /* GLOBAL */
 
 h1 {
