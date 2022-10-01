@@ -42,6 +42,7 @@ def genIcal(arr, name):
 
 def uopolski(fieldSlug : str, week : int, groups : array):
     field_object = Field.objects.get(slug = fieldSlug)
+    fieldType = field_object.type
 
     loc = (field_object.file.path)
     wb = xlrd.open_workbook(loc)
@@ -143,30 +144,55 @@ def uopolski(fieldSlug : str, week : int, groups : array):
         hours.append(start_hour.strftime("%H:%M"))
 
     filteredWeekdays = {}
-    for i in range(5):
-        filteredWeekdays[days[i]] = []
-        for j in range(starting,ending+1):
-            if filtered[j]['data'] == weekArr[days[i]]:
-                filteredWeekdays[days[i]].append(filtered[j])
+    if fieldType == 'niestacjonarne':
+        for i in range(5,7):
+            filteredWeekdays[days[i]] = []
+            for j in range(starting,ending+1):
+                if filtered[j]['data'] == weekArr[days[i]]:
+                    filteredWeekdays[days[i]].append(filtered[j])
 
-    for i in range(5):
-        for j in range(len(filteredWeekdays[days[i]])):
-            if j == 0:
-                diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(hours[0],"%H:%M")).total_seconds()) / (60*15))
-                filteredWeekdays[days[i]][j]['diff'] = diff
-            else:
-                diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(filteredWeekdays[days[i]][j-1]['do'],"%H:%M")).total_seconds()) / (60*15))
-                filteredWeekdays[days[i]][j]['diff'] = diff
+        for i in range(5,7):
+            for j in range(len(filteredWeekdays[days[i]])):
+                if j == 0:
+                    diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(hours[0],"%H:%M")).total_seconds()) / (60*15))
+                    filteredWeekdays[days[i]][j]['diff'] = diff
+                else:
+                    diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(filteredWeekdays[days[i]][j-1]['do'],"%H:%M")).total_seconds()) / (60*15))
+                    filteredWeekdays[days[i]][j]['diff'] = diff
+    else:
+        for i in range(5):
+            filteredWeekdays[days[i]] = []
+            for j in range(starting,ending+1):
+                if filtered[j]['data'] == weekArr[days[i]]:
+                    filteredWeekdays[days[i]].append(filtered[j])
+
+        for i in range(5):
+            for j in range(len(filteredWeekdays[days[i]])):
+                if j == 0:
+                    diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(hours[0],"%H:%M")).total_seconds()) / (60*15))
+                    filteredWeekdays[days[i]][j]['diff'] = diff
+                else:
+                    diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(filteredWeekdays[days[i]][j-1]['do'],"%H:%M")).total_seconds()) / (60*15))
+                    filteredWeekdays[days[i]][j]['diff'] = diff
     
     for row in filtered:
         row['prowadzacy'] = row['stopien'] + " " + row['imie'] + " " + row['nazwisko']
-
-    weekArr.pop(days[5])
-    weekArr.pop(days[6])
+    
+    if fieldType == 'niestacjonarne':
+        weekArr.pop(days[0])
+        weekArr.pop(days[1])
+        weekArr.pop(days[2])
+        weekArr.pop(days[3])
+        weekArr.pop(days[4])
+    else:
+        weekArr.pop(days[5])
+        weekArr.pop(days[6])
     iCalPath = f'{field_object.slug}-grupy-{"-".join(groups[:-1])}.ics'
     genIcal(filtered, iCalPath)
     context = {'title': f'Timetable scrapper | {field_object.name}, {field_object.year} rok, {field_object.degree}, {field_object.type} gr.: {" ".join(groups[:-1])}', 'today' : today, 'weekday': days[todaysWeekday], 'weekArr': weekArr, 'planFiltered': filteredWeekdays, 'wNum': week, 'hours': hours, 'filePath': 'icals/' + iCalPath, 'groups': groups, 'field': field_object}
     return context
+
+# VIEWS -----------
 
 class timetable(TemplateView):
     template = 'timetable.html'
@@ -274,6 +300,8 @@ class about(TemplateView):
     def post(self, request):
         return render(request, self.template, self.context)
 
+# ERROR CODES -----------
+
 class error400(TemplateView):
     template = 'error.html'
     context = {'error': '400 Bad Request', 'errordesc': 'Podany URL nie został odnaleziony na serwerze.'}
@@ -300,6 +328,8 @@ class error404(TemplateView):
         return render(request, self.template, self.context)
     def post(self, request):
         return render(request, self.template, self.context)
+
+# API -----------
 
 class getFieldsToUpdate(TemplateView):
 
