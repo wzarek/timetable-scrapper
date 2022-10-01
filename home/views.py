@@ -308,7 +308,7 @@ class getFieldsToUpdate(TemplateView):
         fields = Field.objects.filter(parent__isnull = False).values()
         fieldsToSend = []
         for field in fields:
-            fieldsToSend.append({'slug': field['slug'], 'link': field['root_link'], 'xpath': field['x_path'], 'filename': field['file']})
+            fieldsToSend.append({'slug': field['slug'], 'link': field['root_link'], 'xpath': field['x_path'], 'filename': field['file'].replace('sheets/', '')})
         return JsonResponse({'fields': fieldsToSend, 'date': timestamp})
 
     def post(self, request):
