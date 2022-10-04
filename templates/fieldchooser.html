@@ -6,8 +6,12 @@
         <div class="form-field">
             <label for="field">kierunek</label>
             <select name="field" id="field">
-                {% for field in fields %}
-                <option value="{{ field.slug }}">{{ field.name }}, {{ field.year }} rok, {{ field.degree }}, {{ field.type }}</option>
+                {% for name, fields in fieldsFiltered.items %}
+                <optgroup label="{{ name }}">
+                    {% for field in fields %}
+                        <option value="{{ field.slug }}">{{ field.name }}, {{ field.year }} rok, {{ field.degree }}, {{ field.type }}</option>
+                    {% endfor %}
+                </optgroup>
                 {% endfor %}
             </select>
         </div>
