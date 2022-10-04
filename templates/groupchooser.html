@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block scripts %}
+<script src="{% static 'js/mobileCheck.js' %}" defer></script>
+{% endblock scripts %}
+
+{% block content %}
+<main id="choose">
+    <p>
+        Wybierasz grupy dla kierunku: <span class="bold">{{ field.name }}, {{ field.year }} rok, {{ field.degree }}, {{ field.type }}</span>
+    </p>
+    <a href="{% url 'chooser-field' %}">wybierz inny kierunek</a>
+    <form method='get' action="{% url 'timetable' %}">
+        <div class="form-field">
+            <input aria-label='kierunek' type="text" name="field" id="field" value="{{ field.slug }}" style="visibility: hidden">
+            <label for="groups">grupy</label>
+            <select multiple name="groups" id="groups">
+                {% for group in groups %}
+                <option value="{{ group.slug }}">{{ group.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <p class="note">
+            Twojej grupy nie ma na liście? Zgłoś to na <a href="mailto:contact@wzarek.me">contact@wzarek.me</a>
+        </p>
+        <p class="note">
+            Grupa <span class="bold">cały rok</span> dodawana jest automatycznie.
+        </p>
+        <div class="form-field">
+            <button type="submit">pokaż plan</button>
+        </div>
+    </form>
+</main>
+{% endblock content %}
+
+{% block footer %}
+    <p></p>
+    <p>widzisz błąd na stronie? <a href="mailto:contact@wzarek.me">zgłoś to</a></p>
+{% endblock footer %}

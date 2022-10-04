@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <main id="homepage">
+        <section id="about">
+            <h2>Jak to działa?</h2>
+            <p class="note">
+                Obecnie obsługujemy tylko <span class="bold">Uniwersytet Opolski - WNOZ</span>, ale w przyszłości planujemy rozwinąć działalność na więcej uczelni. <br />
+                Twoja uczelnia tego potrzebuje? Skontaktuj się na <a href="mailto:contact@wzarek.me">contact@wzarek.me</a> <br />
+            </p>
+            <p>
+                Plan na stronie uczelni umieszczony jest w postaci <span class="bold">arkuszu Excela</span>, który nie grzeszy przejrzystością.
+                Naszym zadaniem jest to zmienić - zmieniamy nudny, cięzki do rozszyfrowania plan na <span class="bold">graficznie przedstawiony</span> rozkład zajęć wraz z możliwością dodania go do <span class="bold">własnego kalendarza</span>. <br />
+                A to wszystko jest bajecznie proste - wystarczy wybrać <span class="bold">kierunek i grupę</span>, a cała magia stanie się <span class="bold">bez</span> Twojej większej <span class="bold">ingerencji</span>! <br /> <br />
+                Jeśli natomiast masz z czymś <span class="bold">problem</span> bądź nie wiesz jak <span class="bold">pobrać</span> plan i <span class="bold">zapisać</span> go do swojego kalendarza np. na telefonie to idealnym miejscem dla Ciebie będzie <a href="{% url 'tutorial' %}"><span class="bold">poradnik</span></a>, który pokieruje Cię krok po kroku.
+            </p>
+        </section>
+        <section id="choose">
+            <h2>Wybierz kierunek i grupy</h2>
+            <p>
+                aby wybrać grupę i kierunek kliknij
+                <a href="{% url 'chooser-field' %}"><span class="bold">tutaj</span></a>
+            </p>
+        </section>
+    </main>
+{% endblock content %}
+
+{% block footer %}
+    <a href="#homepage">do góry</a>
+    <p>widzisz błąd na stronie? <a href="mailto:contact@wzarek.me">zgłoś to</a></p>
+{% endblock footer %}
