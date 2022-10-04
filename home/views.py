@@ -2,18 +2,57 @@ import array
 from dataclasses import field, fields
 from pipes import Template
 from sys import argv
+from tkinter import E
 from tokenize import group
 from turtle import update
 from xmlrpc.client import DateTime
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 import xlrd
 from datetime import date, datetime, time, timedelta
 from icalendar import Calendar, Event
-from .models import Field, Group
+from .models import Field
 from django.http import Http404, JsonResponse
 
-def genIcal(arr, name):
+
+GROUPS_DEFAULT = {'caly rok', 'cały rok', 'caly-rok', 'cały-rok', 'całay rok'}
+
+def floatToString(number : float):
+    return str(int(number))
+
+def updateGroups(slug : str):
+    print(f'Group updating started for {slug}')
+
+    field_object : Field = Field.objects.get(slug = slug)
+
+    location : str = (field_object.file.path)
+    workbook = xlrd.open_workbook(location)
+    sheet = workbook.sheet_by_index(0)
+    sheet.cell_value(0, 0)
+
+    groups : set = set()
+
+    for i in range(4, sheet.nrows):
+        try:
+            try:
+                groups.add(floatToString(sheet.cell_value(i, 11)))
+            except:
+                groups.add(str(sheet.cell_value(i, 11)).strip())
+        except:
+            break
+
+    groups_sorted : set = sorted(groups)
+    groups_sorted = [group for group in groups_sorted if group not in GROUPS_DEFAULT]
+    groups_string : str = ";".join(groups_sorted)
+    if field_object.groups != groups_string:
+        field_object.groups = groups_string
+        field_object.save()
+        print(f'Groups updated: [{groups_string}]')
+    else:
+        print('Groups are up to date')
+
+
+def genIcal(arr : dict, name : str):
     # X-WR-CALNAME:katanaforumps2@gmail.com
     # X-WR-TIMEZONE:Europe/Warsaw
     cal = Calendar()
@@ -23,14 +62,24 @@ def genIcal(arr, name):
         event = Event()
 
         event.add('summary', row['przedmiot'])
-        date = datetime.strptime(row['data'],"%d-%m-%Y").date()
-        time = datetime.strptime(row['od'],"%H:%M").time()
-        combined = datetime.combine(date, time)
+        date : datetime = datetime.strptime(row['data'],"%d-%m-%Y").date()
+        try:
+            time : datetime = datetime.strptime(row['od'],"%H:%M").time()
+        except:
+            time : datetime = datetime.strptime("06:00", "%H:%M").time()
+        combined : datetime = datetime.combine(date, time)
         event.add('dtstart', combined)
-        time = datetime.strptime(row['do'],"%H:%M").time()
-        combined = datetime.combine(date, time)
+        try:
+            time : datetime = datetime.strptime(row['do'],"%H:%M").time()
+        except:
+            time : datetime = datetime.strptime("22:00", "%H:%M").time()
+        combined : datetime = datetime.combine(date, time)
         event.add('dtend', combined)
-        desc = row['prowadzacy']
+        desc : str = row['prowadzacy']
+        if row['od'] == 'brak daty':
+            desc += ' WAZNE: godzina rozpoczęcia nieznana'
+        if row['do'] == 'brak daty':
+            desc += ' WAZNE: godzina zakończenia nieznana'
         event.add('description', desc)
         if 'sala' in row.keys():
             event.add('location', row['sala'].replace('.0', ''))
@@ -40,17 +89,19 @@ def genIcal(arr, name):
     f.write(cal.to_ical())
     f.close()
 
-def uopolski(fieldSlug : str, week : int, groups : array):
-    field_object = Field.objects.get(slug = fieldSlug)
+
+
+def uopolski(fieldSlug : str, week : int, groups_request : array):
+    field_object : Field = Field.objects.get(slug = fieldSlug)
     fieldType = field_object.type
 
-    loc = (field_object.file.path)
+    loc : str = (field_object.file.path)
     wb = xlrd.open_workbook(loc)
     sheet = wb.sheet_by_index(0)
     sheet.cell_value(0, 0)
 
-    labels =  []
-    table = [{} for _ in range(0, sheet.nrows)]
+    labels : array =  []
+    table : array = [{} for _ in range(0, sheet.nrows)]
 
     for i in range(sheet.ncols):
         labels.append(sheet.cell_value(3,i))
@@ -63,28 +114,44 @@ def uopolski(fieldSlug : str, week : int, groups : array):
     labels[7] = 'imie'
     labels[10] = 'kierunek'
     for i in range(4, sheet.nrows):
-        h1e = xlrd.xldate_as_tuple(sheet.cell_value(i, 2), wb.datemode)
-        h2e = xlrd.xldate_as_tuple(sheet.cell_value(i, 3), wb.datemode)
-        h1 = time(*h1e[-3:])
-        h2 = time(*h2e[-3:])
-        table[i-4]['dlugosc'] = int(timedelta(hours=h2.hour-h1.hour, minutes=h2.minute-h1.minute).total_seconds() / (60*15))
+        try:
+            h1e = xlrd.xldate_as_tuple(sheet.cell_value(i, 2), wb.datemode)
+            h1 = time(*h1e[-3:])
+        except:
+            h1 = 'brak daty'
+
+        try:
+            h2e = xlrd.xldate_as_tuple(sheet.cell_value(i, 3), wb.datemode)
+            h2 = time(*h2e[-3:])
+        except:
+            h2 = 'brak daty'
+
+        if h1 == 'brak daty' or h2 =='brak daty':
+            table[i-4]['dlugosc'] = 1
+        else:
+            table[i-4]['dlugosc'] = int(timedelta(hours=h2.hour-h1.hour, minutes=h2.minute-h1.minute).total_seconds() / (60*15))
+        
         for j in range(0, sheet.ncols):
             if j==0:
                 cellDate = xlrd.xldate_as_tuple(sheet.cell_value(i, j), wb.datemode)
                 table[i-4][labels[j]] = date(*cellDate[:-3]).strftime("%d-%m-%Y")
             elif j==2 or j==3:
-                cellDate = xlrd.xldate_as_tuple(sheet.cell_value(i, j), wb.datemode)
-                table[i-4][labels[j]] = time(*cellDate[-3:]).strftime("%H:%M")
+                try:
+                    cellDate = xlrd.xldate_as_tuple(sheet.cell_value(i, j), wb.datemode)
+                    table[i-4][labels[j]] = time(*cellDate[-3:]).strftime("%H:%M")
+                except:
+                    table[i-4][labels[j]] = 'brak daty'
             else:
-                table[i-4][labels[j]] = str(sheet.cell_value(i, j))
+                table[i-4][labels[j]] = str(sheet.cell_value(i, j)).strip()
 
     filtered = []
-    if len(groups) == 0:
+
+    groups = groups_request.copy()
+    if len(groups_request) == 0:
         groups = ['II', 3, 'cały rok']
-    elif not 'cały rok' in groups:
-        groups.append('cały rok')
-    elif not 'caly rok' in groups:
-        groups.append('caly rok')
+    else:
+        for group in GROUPS_DEFAULT:
+            groups.append(group)
 
     for i in range(len(table)):
         if table[i]:
@@ -129,6 +196,9 @@ def uopolski(fieldSlug : str, week : int, groups : array):
         if (int(filtered[i]['data'][:2]) > int(weekArr[days[6]][:2]) and int(filtered[i]['data'][3:5]) == int(weekArr[days[6]][3:5])) or (int(filtered[i]['data'][3:5]) > int(weekArr[days[6]][3:5])):
             break
         else:
+            if filtered[i]['od'] == 'brak daty' or filtered[i]['do'] == 'brak daty':
+                break
+
             ending = i
             if int(filtered[i]['od'][:2]) < int(start_hour[:2]):
                 start_hour = filtered[i]['od']
@@ -154,10 +224,16 @@ def uopolski(fieldSlug : str, week : int, groups : array):
         for i in range(5,7):
             for j in range(len(filteredWeekdays[days[i]])):
                 if j == 0:
-                    diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(hours[0],"%H:%M")).total_seconds()) / (60*15))
+                    try:
+                        diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(hours[0],"%H:%M")).total_seconds()) / (60*15))
+                    except:
+                        diff = 1
                     filteredWeekdays[days[i]][j]['diff'] = diff
                 else:
-                    diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(filteredWeekdays[days[i]][j-1]['do'],"%H:%M")).total_seconds()) / (60*15))
+                    try:
+                        diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(filteredWeekdays[days[i]][j-1]['do'],"%H:%M")).total_seconds()) / (60*15))
+                    except:
+                        diff = 1
                     filteredWeekdays[days[i]][j]['diff'] = diff
     else:
         for i in range(5):
@@ -169,10 +245,16 @@ def uopolski(fieldSlug : str, week : int, groups : array):
         for i in range(5):
             for j in range(len(filteredWeekdays[days[i]])):
                 if j == 0:
-                    diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(hours[0],"%H:%M")).total_seconds()) / (60*15))
+                    try:
+                        diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(hours[0],"%H:%M")).total_seconds()) / (60*15))
+                    except:
+                        diff = 1
                     filteredWeekdays[days[i]][j]['diff'] = diff
                 else:
-                    diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(filteredWeekdays[days[i]][j-1]['do'],"%H:%M")).total_seconds()) / (60*15))
+                    try:
+                        diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(filteredWeekdays[days[i]][j-1]['do'],"%H:%M")).total_seconds()) / (60*15))
+                    except:
+                        diff = 1
                     filteredWeekdays[days[i]][j]['diff'] = diff
     
     for row in filtered:
@@ -189,7 +271,7 @@ def uopolski(fieldSlug : str, week : int, groups : array):
         weekArr.pop(days[6])
     iCalPath = f'{field_object.slug}-grupy-{"-".join(groups[:-1])}.ics'
     genIcal(filtered, iCalPath)
-    context = {'title': f'Timetable scrapper | {field_object.name}, {field_object.year} rok, {field_object.degree}, {field_object.type} gr.: {" ".join(groups[:-1])}', 'today' : today, 'weekday': days[todaysWeekday], 'weekArr': weekArr, 'planFiltered': filteredWeekdays, 'wNum': week, 'hours': hours, 'filePath': 'icals/' + iCalPath, 'groups': groups, 'field': field_object}
+    context = {'title': f'Timetable scrapper | {field_object.name}, {field_object.year} rok, {field_object.degree}, {field_object.type} gr.: {" ".join(groups[:-1])}', 'today' : today, 'weekday': days[todaysWeekday], 'weekArr': weekArr, 'planFiltered': filteredWeekdays, 'wNum': week, 'hours': hours, 'filePath': 'icals/' + iCalPath, 'groups': groups_request, 'field': field_object}
     return context
 
 # VIEWS -----------
@@ -198,6 +280,8 @@ class timetable(TemplateView):
     template = 'timetable.html'
 
     def get(self, request):
+        incrementViewcount = False
+
         try:
             week = int(request.GET['week'])
         except:
@@ -213,6 +297,7 @@ class timetable(TemplateView):
         if request.GET.get('field'):
             fieldSlug = request.GET['field']
             request.session['fieldSlug'] = fieldSlug
+            incrementViewcount = True
         else:
             fieldSlug = request.session.get('fieldSlug', 'dietetyka-lic-1rok-stac')
 
@@ -220,6 +305,13 @@ class timetable(TemplateView):
         field = Field.objects.get(slug = fieldSlug)
         note = f'{field.name}, {field.year} rok, {field.degree}, {field.type} - {field.university.name}'
         context = uopolski(fieldSlug, week, groups)
+
+        # if incrementViewcount:
+        #     if field.visitcount == None:
+        #         field.visitcount = 1
+        #     else:
+        #         field.visitcount = field.visitcount + 1
+        #     field.save()
         # except:
         #     pass
       
@@ -243,6 +335,12 @@ class home(TemplateView):
     template = 'home.html'
     context = {'title': 'Timetable scrapper | home', 'headertitle': 'narzędzie do upraszczania planu zajęć'}
 
+    # ---- TEST
+    # fields = Field.objects.filter(parent__isnull = False).values()
+    # for field in fields:
+    #     updateGroups(field['slug'])
+    # ---- TEST
+
 
     def get(self, request): 
         return render(request, self.template, self.context)
@@ -256,7 +354,7 @@ class chooseField(TemplateView):
     fieldsFiltered = {}
     for p in parentFields:
         fieldsFiltered[p['name']] = Field.objects.filter(parent__slug = p['slug']).values()
-    print(fieldsFiltered)
+    # print(fieldsFiltered)
     fields = Field.objects.all().values()
     context = {'title': 'Timetable scrapper | wybierz kierunek', 'headertitle': 'wybierz odpowiadający plan', 'fields': fields}
 
@@ -274,8 +372,15 @@ class chooseGroup(TemplateView):
             field = request.GET['field']
         except:
             raise Http404
-        groups = Group.objects.filter(fields__slug = field).values()
-        field = Field.objects.get(slug = field)
+
+        field : Field = Field.objects.get(slug = field)
+        groups : array = field.groups.split(";")
+
+        if not field.groups:
+            response = redirect('timetable')
+            response['Location'] += f'?field={field.slug}&groups=brak%20grup'
+            return response
+
         self.context['groups'] = groups
         self.context['field'] = field
         return render(request, self.template, self.context)
@@ -362,6 +467,10 @@ class updateField(TemplateView):
             field.link = requestedLink
             field.updated = datetime.now()
             field.save()
+            try:
+                updateGroups(requestedSlug)
+            except Exception as e:
+                print('Could not update groups' + str(e))
         except Exception:
             isSuccess = False
         return JsonResponse({'success': isSuccess})

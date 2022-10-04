@@ -5,11 +5,11 @@ from bs4 import BeautifulSoup
 import requests
 from lxml import etree
 
-rootEndpoint = 'http://localhost:8000'
+ROOT_ENDPOINT = 'http://localhost:8000'
 
 def getSheetsToUpdate():
     try:
-        apiEndpoint = f'{rootEndpoint}/api/get-fields'
+        apiEndpoint = f'{ROOT_ENDPOINT}/api/get-fields'
         response = requests.get(apiEndpoint)
         fieldsJSON = response.json()
         print('Succesfully got sheets to update')
@@ -17,10 +17,11 @@ def getSheetsToUpdate():
         print('Could not get sheets to update')
         return
     for field in fieldsJSON['fields']:
+        print('Proccessing sheet for: ' + field['slug'])
         try:
             updateSheet(field['link'], field['xpath'], field['filename'], field['slug'])
         except Exception as e:
-            print(e + ' Could not update ' + field['slug'])
+            print('Could not update ' + field['slug'] + str(e))
             return
 
 def updateSheet(link, x_path, filename, slug):
@@ -31,26 +32,29 @@ def updateSheet(link, x_path, filename, slug):
         file = dom.xpath(x_path)[0]
         href = file.get('href')
     except Exception as e:
-        print('Could not get the response from link', e)
+        print('Could not get the response from link', str(e))
         return
-    if f'{file.text}.xls' != filename or not isfile(f'/home/wzarek/sheets/{filename}'):
+    if f'{file.text}.xls' != filename or not isfile(f'sheets/{filename}'):
         try:
-            rename(f'/home/wzarek/sheets/{filename}', f'/home/wzarek/sheets_archive/{filename}')
+            if isfile(f'sheets/{filename}'):
+                rename(f'sheets/{filename}', f'sheets_archive/{filename}')
         except Exception as e:
-            print('Could not archive: ' + filename + ' ' + e)
+            print('Could not archive: ' + filename + ' ' + str(e))
         try:
-            with open('/home/wzarek/sheets/' + file.text + '.xls', 'wb') as created_file:
+            with open('sheets/' + file.text + '.xls', 'wb') as created_file:
                 res = requests.get(href)
                 created_file.write(res.content)
         except Exception as e:
-            print('Could not create new file: ' + file.text + ' ' + e)
+            print('Could not create new file: ' + file.text + ' ' + str(e))
         try:
             sendUpdatedSheet(slug, f'{file.text}.xls', href)
         except:
             print('Could not update the sheet: ' + file.text)
+    else:
+        print('Sheet did not change')
 
 def sendUpdatedSheet(slug, file, link):
-    apiEndpoint = f'{rootEndpoint}/api/change-field?slug={slug}&file={file}&link={link}'
+    apiEndpoint = f'{ROOT_ENDPOINT}/api/change-field?slug={slug}&file={file}&link={link}'
     response = requests.get(apiEndpoint)
     print(response.json())
 

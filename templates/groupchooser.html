@@ -17,7 +17,7 @@
             <label for="groups">grupy</label>
             <select multiple name="groups" id="groups">
                 {% for group in groups %}
-                <option value="{{ group.slug }}">{{ group.name }}</option>
+                <option value="{{ group.slug }}">{{ group }}</option>
                 {% endfor %}
             </select>
         </div>
