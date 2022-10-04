@@ -196,10 +196,11 @@ def uopolski(fieldSlug : str, week : int, groups_request : array):
         if (int(filtered[i]['data'][:2]) > int(weekArr[days[6]][:2]) and int(filtered[i]['data'][3:5]) == int(weekArr[days[6]][3:5])) or (int(filtered[i]['data'][3:5]) > int(weekArr[days[6]][3:5])):
             break
         else:
-            if filtered[i]['od'] == 'brak daty' or filtered[i]['do'] == 'brak daty':
-                break
-
             ending = i
+
+            if filtered[i]['od'] == 'brak daty' or filtered[i]['do'] == 'brak daty':
+                continue
+
             if int(filtered[i]['od'][:2]) < int(start_hour[:2]):
                 start_hour = filtered[i]['od']
             if int(filtered[i]['do'][:2]) > int(end_hour[:2]):
@@ -271,6 +272,7 @@ def uopolski(fieldSlug : str, week : int, groups_request : array):
         weekArr.pop(days[6])
     iCalPath = f'{field_object.slug}-grupy-{"-".join(groups[:-1])}.ics'
     genIcal(filtered, iCalPath)
+
     context = {'title': f'Timetable scrapper | {field_object.name}, {field_object.year} rok, {field_object.degree}, {field_object.type} gr.: {" ".join(groups[:-1])}', 'today' : today, 'weekday': days[todaysWeekday], 'weekArr': weekArr, 'planFiltered': filteredWeekdays, 'wNum': week, 'hours': hours, 'filePath': 'icals/' + iCalPath, 'groups': groups_request, 'field': field_object}
     return context
 
