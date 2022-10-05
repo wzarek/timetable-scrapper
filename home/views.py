@@ -127,7 +127,7 @@ def uopolski(fieldSlug : str, week : int, groups_request : array):
             h2 = 'brak daty'
 
         if h1 == 'brak daty' or h2 =='brak daty':
-            table[i-4]['dlugosc'] = 1
+            table[i-4]['dlugosc'] = 3
         else:
             table[i-4]['dlugosc'] = int(timedelta(hours=h2.hour-h1.hour, minutes=h2.minute-h1.minute).total_seconds() / (60*15))
         
@@ -198,12 +198,9 @@ def uopolski(fieldSlug : str, week : int, groups_request : array):
         else:
             ending = i
 
-            if filtered[i]['od'] == 'brak daty' or filtered[i]['do'] == 'brak daty':
-                continue
-
-            if int(filtered[i]['od'][:2]) < int(start_hour[:2]):
+            if filtered[i]['od'] != 'brak daty' and int(filtered[i]['od'][:2]) < int(start_hour[:2]):
                 start_hour = filtered[i]['od']
-            if int(filtered[i]['do'][:2]) > int(end_hour[:2]):
+            if filtered[i]['do'] != 'brak daty' and int(filtered[i]['do'][:2]) > int(end_hour[:2]):
                 end_hour = filtered[i]['do']
 
     if start_hour != '99:99':
@@ -216,47 +213,30 @@ def uopolski(fieldSlug : str, week : int, groups_request : array):
 
     filteredWeekdays = {}
     if fieldType == 'niestacjonarne':
-        for i in range(5,7):
-            filteredWeekdays[days[i]] = []
-            for j in range(starting,ending+1):
-                if filtered[j]['data'] == weekArr[days[i]]:
-                    filteredWeekdays[days[i]].append(filtered[j])
-
-        for i in range(5,7):
-            for j in range(len(filteredWeekdays[days[i]])):
-                if j == 0:
-                    try:
-                        diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(hours[0],"%H:%M")).total_seconds()) / (60*15))
-                    except:
-                        diff = 1
-                    filteredWeekdays[days[i]][j]['diff'] = diff
-                else:
-                    try:
-                        diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(filteredWeekdays[days[i]][j-1]['do'],"%H:%M")).total_seconds()) / (60*15))
-                    except:
-                        diff = 1
-                    filteredWeekdays[days[i]][j]['diff'] = diff
+        loop_start = 5
+        loop_end = 7
     else:
-        for i in range(5):
-            filteredWeekdays[days[i]] = []
-            for j in range(starting,ending+1):
-                if filtered[j]['data'] == weekArr[days[i]]:
-                    filteredWeekdays[days[i]].append(filtered[j])
+        loop_start = 0
+        loop_end = 5
 
-        for i in range(5):
-            for j in range(len(filteredWeekdays[days[i]])):
-                if j == 0:
-                    try:
-                        diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(hours[0],"%H:%M")).total_seconds()) / (60*15))
-                    except:
-                        diff = 1
-                    filteredWeekdays[days[i]][j]['diff'] = diff
-                else:
-                    try:
-                        diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(filteredWeekdays[days[i]][j-1]['do'],"%H:%M")).total_seconds()) / (60*15))
-                    except:
-                        diff = 1
-                    filteredWeekdays[days[i]][j]['diff'] = diff
+    for i in range(loop_start,loop_end):
+        filteredWeekdays[days[i]] = []
+        for j in range(starting,ending+1):
+            if filtered[j]['data'] == weekArr[days[i]]:
+                filteredWeekdays[days[i]].append(filtered[j])
+
+    for i in range(loop_start,loop_end):
+        prev_diff = -1
+        for j in range(len(filteredWeekdays[days[i]])):
+            try:
+                diff = int(((datetime.strptime(filteredWeekdays[days[i]][j]['od'],"%H:%M") - datetime.strptime(hours[0],"%H:%M")).total_seconds()) / (60*15))
+            except:
+                diff = 1
+            if diff == prev_diff:
+                filteredWeekdays[days[i]][j]['type'] = 'small'
+                filteredWeekdays[days[i]][j-1]['type'] = 'small-second'
+            prev_diff = diff
+            filteredWeekdays[days[i]][j]['diff'] = diff
     
     for row in filtered:
         row['prowadzacy'] = row['stopien'] + " " + row['imie'] + " " + row['nazwisko']

@@ -80,7 +80,7 @@
                     {% for key, var in planFiltered.items %}
                         <section class='plan-day'>
                             {% for k in var %}
-                            <div data-height='{{ k.dlugosc }}' data-diff="{{ k.diff }}" class='plan-single {%if today == k.data %}today{%endif%}'>
+                            <div data-height='{{ k.dlugosc }}' data-diff="{{ k.diff }}" class='plan-single {{ k.type }} {%if today == k.data %}today{%endif%}'>
                                 <span>{{ k.od }} - {{ k.do }}</span>
                                 <h3>{{ k.przedmiot }}</h3>
                                 <p>{{ k.stopien }} {{ k.imie }} {{ k.nazwisko }}</p>

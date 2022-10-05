@@ -169,6 +169,7 @@ main#timetable .form-groups {
 .plan-day {
     width: calc((var(--plan-width) / 5) - 2vw);
     margin: .5vh .5vw;
+    position: relative;
 }
 
 .plan-single {
@@ -177,14 +178,23 @@ main#timetable .form-groups {
     --diff: 0;
     background: rgba(255, 255, 255, 0.6);
     overflow: hidden;
-    position: relative;
+    position: absolute;
     border: 1px solid black;
     padding: .5vh .5vw;
     width: 100%;
     height: calc(var(--height) * 3vh);
-    margin-top: calc(var(--diff) * 3vh);
+    top: calc(var(--diff) * 3vh);
     font-size: 0.75vw;
     border-radius: 1em;
+}
+
+.plan-single.small {
+    width: 50%;
+}
+
+.plan-single.small-second {
+    width: 50%;
+    right: 0;
 }
 
 .plan-single h3 {
@@ -197,6 +207,7 @@ main#timetable .form-groups {
     width: fit-content;
     height: fit-content;
     background: rgba(255, 255, 255, 0.8);
+    z-index: 100;
 }
 
 .today {
