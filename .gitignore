@@ -9,6 +9,7 @@ media
 sheets/
 sheets_archive/
 icals/
+static_f/
 
 # Backup files # 
 *.bak 
