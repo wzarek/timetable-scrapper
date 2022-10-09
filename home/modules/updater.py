@@ -4,8 +4,11 @@ from urllib import request
 from bs4 import BeautifulSoup
 import requests
 from lxml import etree
+from mailer.emailsender import EmailSender
 
 ROOT_ENDPOINT = 'http://localhost:8000'
+
+changed_sheets = []
 
 def getSheetsToUpdate():
     try:
@@ -23,6 +26,7 @@ def getSheetsToUpdate():
         except Exception as e:
             print('Could not update ' + field['slug'] + str(e))
             return
+    EmailSender(['kontakt.wzarek@gmail.com']).sendReport(changed_sheets)
 
 def updateSheet(link, x_path, filename, slug):
     try:
@@ -56,6 +60,7 @@ def updateSheet(link, x_path, filename, slug):
 def sendUpdatedSheet(slug, file, link):
     apiEndpoint = f'{ROOT_ENDPOINT}/api/change-field?slug={slug}&file={file}&link={link}'
     response = requests.get(apiEndpoint)
+    changed_sheets.append(slug)
     print(response.json())
 
 getSheetsToUpdate()

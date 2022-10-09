@@ -1,4 +1,3 @@
-import array
 from dataclasses import field, fields
 from pipes import Template
 from sys import argv
@@ -84,14 +83,16 @@ def genIcal(arr : dict, name : str):
         if 'sala' in row.keys():
             event.add('location', row['sala'].replace('.0', ''))
         cal.add_component(event)
+    try:
+        f = open('icals/' + name, 'wb')
+        f.write(cal.to_ical())
+        f.close()
+    except Exception as e:
+        print(str(e))
 
-    f = open('icals/' + name, 'wb')
-    f.write(cal.to_ical())
-    f.close()
 
 
-
-def uopolski(fieldSlug : str, week : int, groups_request : array):
+def uopolski(fieldSlug : str, week : int, groups_request : list):
     field_object : Field = Field.objects.get(slug = fieldSlug)
     fieldType = field_object.type
 
@@ -100,8 +101,8 @@ def uopolski(fieldSlug : str, week : int, groups_request : array):
     sheet = wb.sheet_by_index(0)
     sheet.cell_value(0, 0)
 
-    labels : array =  []
-    table : array = [{} for _ in range(0, sheet.nrows)]
+    labels =  []
+    table = [{} for _ in range(0, sheet.nrows)]
 
     for i in range(sheet.ncols):
         labels.append(sheet.cell_value(3,i))
@@ -130,11 +131,15 @@ def uopolski(fieldSlug : str, week : int, groups_request : array):
             table[i-4]['dlugosc'] = 3
         else:
             table[i-4]['dlugosc'] = int(timedelta(hours=h2.hour-h1.hour, minutes=h2.minute-h1.minute).total_seconds() / (60*15))
-        
+
         for j in range(0, sheet.ncols):
             if j==0:
-                cellDate = xlrd.xldate_as_tuple(sheet.cell_value(i, j), wb.datemode)
-                table[i-4][labels[j]] = date(*cellDate[:-3]).strftime("%d-%m-%Y")
+                try:
+                    cellDate = xlrd.xldate_as_tuple(sheet.cell_value(i, j), wb.datemode)
+                    table[i-4][labels[j]] = date(*cellDate[:-3]).strftime("%d-%m-%Y")
+                except Exception as e:
+                    print(str(e))
+                    table[i-4][labels[j]] = 'brak daty'
             elif j==2 or j==3:
                 try:
                     cellDate = xlrd.xldate_as_tuple(sheet.cell_value(i, j), wb.datemode)
@@ -237,10 +242,10 @@ def uopolski(fieldSlug : str, week : int, groups_request : array):
                 filteredWeekdays[days[i]][j-1]['type'] = 'small-second'
             prev_diff = diff
             filteredWeekdays[days[i]][j]['diff'] = diff
-    
+
     for row in filtered:
         row['prowadzacy'] = row['stopien'] + " " + row['imie'] + " " + row['nazwisko']
-    
+
     if fieldType == 'niestacjonarne':
         weekArr.pop(days[0])
         weekArr.pop(days[1])
@@ -250,10 +255,12 @@ def uopolski(fieldSlug : str, week : int, groups_request : array):
     else:
         weekArr.pop(days[5])
         weekArr.pop(days[6])
-    iCalPath = f'{field_object.slug}-grupy-{"-".join(groups[:-1])}.ics'
+
+    groups_string = [str(x) for x in groups_request]
+    iCalPath = f'{field_object.slug}-grupy-{"-".join(groups_string)}.ics'
     genIcal(filtered, iCalPath)
 
-    context = {'title': f'Timetable scrapper | {field_object.name}, {field_object.year} rok, {field_object.degree}, {field_object.type} gr.: {" ".join(groups[:-1])}', 'today' : today, 'weekday': days[todaysWeekday], 'weekArr': weekArr, 'planFiltered': filteredWeekdays, 'wNum': week, 'hours': hours, 'filePath': 'icals/' + iCalPath, 'groups': groups_request, 'field': field_object}
+    context = {'title': f'Timetable scrapper | {field_object.name}, {field_object.year} rok, {field_object.degree}, {field_object.type} gr.: {" ".join(groups_string)}', 'today' : today, 'weekday': days[todaysWeekday], 'weekArr': weekArr, 'planFiltered': filteredWeekdays, 'wNum': week, 'hours': hours, 'filePath': 'icals/' + iCalPath, 'groups': groups_request, 'field': field_object}
     return context
 
 # VIEWS -----------
@@ -296,7 +303,7 @@ class timetable(TemplateView):
         #     field.save()
         # except:
         #     pass
-      
+
         context['note'] = note
         context['headertitle'] = f'dzisiaj jest  {context["weekday"]}, {context["today"]}'
         return render(request, self.template, context)
@@ -310,9 +317,6 @@ class timetable(TemplateView):
         context['headertitle'] = f'dzisiaj jest  {context["weekday"]}, {context["today"]}'
         return render(request, self.template, context)
 
-        # sprawdzenie czy zmienila sie data w porownaniu do poprzedniej, jak tak to przeskakujemy do nastepnej
-        # w kazdym dniu bloki co 1h - position relative, w nich obiekt np godzina 9:30 przypinamy do 3 bloku(bo zaczynamy od 7) i dajemy top 50%
-        
 class home(TemplateView):
     template = 'home.html'
     context = {'title': 'Timetable scrapper | home', 'headertitle': 'narzędzie do upraszczania planu zajęć'}
@@ -324,7 +328,7 @@ class home(TemplateView):
     # ---- TEST
 
 
-    def get(self, request): 
+    def get(self, request):
         return render(request, self.template, self.context)
 
     def post(self, request):
@@ -355,7 +359,7 @@ class chooseGroup(TemplateView):
             raise Http404
 
         field : Field = Field.objects.get(slug = field)
-        groups : array = field.groups.split(";")
+        groups = field.groups.split(";")
 
         if not field.groups:
             response = redirect('timetable')
@@ -441,7 +445,7 @@ class updateField(TemplateView):
             requestedLink = request.GET['link']
         except:
             return JsonResponse({'success': False})
-        
+
         try:
             field = Field.objects.get(slug = requestedSlug)
             field.file = f'sheets/{str(requestedFileName)}'
