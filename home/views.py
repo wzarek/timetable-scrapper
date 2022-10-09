@@ -392,32 +392,30 @@ class about(TemplateView):
 
 # ERROR CODES -----------
 
-class error400(TemplateView):
+def error400(request, exception):
     template = 'error.html'
-    context = {'error': '400 Bad Request', 'errordesc': 'Podany URL nie został odnaleziony na serwerze.'}
+    context = {'title': '404 - Błędne zapytanie', 'error': '400 Bad Request', 'errordesc': 'Podany URL nie został odnaleziony na serwerze.'}
 
-    def get(self, request):
-        return render(request, self.template, self.context)
-    def post(self, request):
-        return render(request, self.template, self.context)
+    return render(request, template, context, status=400)
 
-class error403(TemplateView):
+
+def error403(request, exception):
     template = 'error.html'
-    context = {'error': '403 Forbidden', 'errordesc': 'Brak uprawnień do przeglądania podanego adresu.'}
+    context = {'title': '403 - Brak uprawnień', 'error': '403 Forbidden', 'errordesc': 'Brak uprawnień do przeglądania podanego adresu.'}
 
-    def get(self, request):
-        return render(request, self.template, self.context)
-    def post(self, request):
-        return render(request, self.template, self.context)
+    return render(request, template, context, status=403)
 
-class error404(TemplateView):
+def error404(request, exception):
     template = 'error.html'
-    context = {'error': '404 Not Found', 'errordesc': 'Podana strona nie została odnaleziona. Sprawdź podany link bądź wróć do formularza i uzupełnij go ponownie.'}
+    context = {'title': '404 - Nie odnaleziono strony','error': '404 Not Found', 'errordesc': 'Podana strona nie została odnaleziona. Sprawdź podany link bądź wróć do formularza i uzupełnij go ponownie.'}
 
-    def get(self, request):
-        return render(request, self.template, self.context)
-    def post(self, request):
-        return render(request, self.template, self.context)
+    return render(request, template, context, status=404)
+
+def error500(request):
+    template = 'error.html'
+    context = {'title': '500 - Problem z serwerem', 'error': '500 Internal Server Error', 'errordesc': 'Przepraszamy, nastąpił problem z serwerem. Spróbuj ponownie.'}
+
+    return render(request, template, context, status=500)
 
 # API -----------
 
