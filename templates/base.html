@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Narzędzie do uprzaszczania planu zajęć dla Uniwersytetu Opolskiego, które zamienia arkusz Excela na przejrzysty graficzny plan zajęć" >
     <meta name="keywords" content="opole, uniwersytet opolski, plan zajęć, arkusz">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/new-style.css' %}">
     <link rel="stylesheet" href="{% static 'css/rwd.css' %}">
     {% block styles %}
     {% endblock styles %}
@@ -21,7 +21,7 @@
     <body>
     <header>
         <h1>
-            <a href="{% url 'homepage' %}">Timetable scrapper</a>
+            <a href="{% url 'homepage' %}">Upraszczator planu</a>
         </h1>
         <p>{{ headertitle }}</p>
         <svg class="menu-hamburger" viewBox="0 0 100 80" width="30" height="30">

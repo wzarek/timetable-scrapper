@@ -63,7 +63,7 @@ body {
 
 header,
 footer {
-    width: 90%;
+    width: 100%;
     margin-inline: auto;
     padding: 1rem 0;
     display: grid;
@@ -77,6 +77,7 @@ footer {
 header {
     border-bottom: 1px solid white;
     padding: .25rem 0;
+    background-color: darkcyan;
 }
 
 header h1 {
@@ -341,13 +342,10 @@ main#timetable .form-groups {
 
 footer {
     margin-top: 1rem;
-    
     border-top: 1px solid white;
 }
 
 /* HOMEPAGE */
-
-main#homepage,
 main#tutorial,
 main#about {
     width: 70vw;
@@ -357,7 +355,6 @@ main#about {
     color: white;
 }
 
-main#homepage > section,
 main#tutorial > section,
 main#about > section {
     padding: 1em;
