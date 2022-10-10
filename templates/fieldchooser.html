@@ -4,7 +4,7 @@
 <main id="choose">
     <form method='get' action="{% url 'chooser-group' %}">
         <div class="form-field">
-            <label for="field">kierunek</label>
+            <label for="field">wybierz kierunek</label>
             <select name="field" id="field">
                 {% for name, fields in fieldsFiltered.items %}
                 <optgroup label="{{ name }}">

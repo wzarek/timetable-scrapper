@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@100;300;400;500;700&display=swap');
+
+:root {
+    --accent-color: rgb(123, 186, 227);
+    --timetable-width: 60vw;
+    --plan-width: var(--timetable-width);
+    --hours-width: 7vw;
+    --main-width: 80vw;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 300;
+}
+
+::-webkit-scrollbar {
+    width: .7vw;
+    height: 8px;
+    background-color: rgba(52, 67, 102, .5); 
+}  
+
+::-webkit-scrollbar-thumb {
+    background: rgba(123, 186, 227, 0.24);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(9.5px);
+    border: 1px solid rgba(29, 146, 218, 0.56);
+    transition-duration: 100ms;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(123, 186, 227, 0.54);
+}
+
+body {
+    background-color: rgb(0, 0, 0);
+    background-image: linear-gradient(90deg, rgb(4, 19, 53) 0%, rgb(0, 0, 0) 100%);
+    color: white;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+}
+
+/* GLOBAL */
+
+h1 {
+    font-weight: 500;
+    margin: .5em 1em;
+}
+
+h2 {
+    font-weight: 500;
+    margin-bottom: 1em;
+}
+
+button {
+    padding: .5vh .5vw;
+    margin: .5vh .5vw;
+}
+
+h1 > a {
+    font-weight: 500;
+}
+
+span.bold {
+    font-weight: 500;
+}
+
+p.note {
+    font-size: .8rem;
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+    position: relative;
+    color: white;
+    width: 100%;
+}
+
+p.note::after {
+    content: '';
+    height: 100%;
+    border-left: 1px solid red;
+    bottom: 0;
+    left: -1rem;
+    position: absolute;
+}
+
+a {
+    text-decoration: none;
+    color: var(--accent-color);
+}
+
+a:hover {
+    color: rgb(80, 178, 244);
+}
+
+button {
+    background: rgba(0, 115, 185, 0.24);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(9.5px);
+    border: 1px solid rgba(29, 146, 218, 0.56);
+    padding: .5em 1em;
+    border-radius: 1em;
+    cursor: pointer;
+    transition-duration: .25s;
+    color: white;
+}
+
+button:hover {
+    background-color: black;
+}
+
+/* HEADER, FOOTER */
+
+header,
+footer {
+    width: 100%;
+    margin-inline: auto;
+    padding: 1rem 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: center;
+    align-items: center;
+    color: white;
+    background-color: transparent;
+}
+
+header h1 {
+    font-size: 1.4rem;
+}
+
+header svg {
+    fill: white;
+    border-radius: .5em;
+    cursor: pointer;
+    padding: .25em;
+}
+
+header nav {
+    position: fixed;
+    right: -100%;
+    top: 0;
+    height: 100vh;
+    width: 25vw;
+    background-color: rgba(255, 255, 255, .95);
+    transition: right .35s 0s ease-out;
+    z-index: 99;
+}
+
+header nav svg {
+    cursor: pointer;
+    width: 2.5rem;
+    height: 2.5rem;
+    fill: black;
+    margin-left: 1vw;
+    margin-top: 1vw;
+}
+
+header nav ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    list-style: none;
+    height: 50%;
+    padding-left: 2vw;
+}
+
+header nav ul li a {
+    color: black;
+}
+
+header nav ul li.active-link a {
+    color: var(--accent-color);
+    font-weight: 500;
+}
+
+footer {
+    margin-top: 1rem;
+    padding-block: 2em;
+}
