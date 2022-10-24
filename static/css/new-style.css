@@ -139,7 +139,7 @@ main#homepage section {
     position: relative;
     width: 100vw;
     margin-top: -20vh;
-    margin-bottom: -20vh;
+    margin-bottom: -40vh;
     z-index: -2;
     transform: rotate(180deg);
 }

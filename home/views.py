@@ -1,4 +1,5 @@
 from dataclasses import field, fields
+from genericpath import isfile
 from pipes import Template
 from sys import argv
 from tkinter import E
@@ -11,7 +12,7 @@ import xlrd
 from datetime import date, datetime, time, timedelta
 from icalendar import Calendar, Event
 from .models import Field
-from django.http import Http404, JsonResponse
+from django.http import Http404, JsonResponse, FileResponse
 
 
 GROUPS_DEFAULT = {'caly rok', 'cały rok', 'caly-rok', 'cały-rok', 'całay rok'}
@@ -60,7 +61,7 @@ def genIcal(arr : dict, name : str):
     for row in arr:
         event = Event()
 
-        event.add('summary', row['przedmiot'])
+        event.add('summary', f"[{row['rodzaj']}] {row['przedmiot']}")
         date : datetime = datetime.strptime(row['data'],"%d-%m-%Y").date()
         try:
             time : datetime = datetime.strptime(row['od'],"%H:%M").time()
@@ -260,7 +261,7 @@ def uopolski(fieldSlug : str, week : int, groups_request : list):
     iCalPath = f'{field_object.slug}-grupy-{"-".join(groups_string)}.ics'
     genIcal(filtered, iCalPath)
 
-    context = {'title': f'Timetable scrapper | {field_object.name}, {field_object.year} rok, {field_object.degree}, {field_object.type} gr.: {" ".join(groups_string)}', 'today' : today, 'weekday': days[todaysWeekday], 'weekArr': weekArr, 'planFiltered': filteredWeekdays, 'wNum': week, 'hours': hours, 'filePath': 'icals/' + iCalPath, 'groups': groups_request, 'field': field_object}
+    context = {'title': f'Easytable | {field_object.name}, {field_object.year} rok, {field_object.degree}, {field_object.type} gr.: {" ".join(groups_string)}', 'today' : today, 'weekday': days[todaysWeekday], 'weekArr': weekArr, 'planFiltered': filteredWeekdays, 'wNum': week, 'hours': hours, 'filePath': '/pobierz-plan?name=' + iCalPath, 'groups': groups_request, 'field': field_object}
     return context
 
 # VIEWS -----------
@@ -319,7 +320,7 @@ class timetable(TemplateView):
 
 class home(TemplateView):
     template = 'home.html'
-    context = {'title': 'Timetable scrapper | home', 'headertitle': 'narzędzie do upraszczania planu zajęć'}
+    context = {'title': 'Easytable | home', 'headertitle': 'narzędzie do upraszczania planu zajęć'}
 
     # ---- TEST
     # fields = Field.objects.filter(parent__isnull = False).values()
@@ -341,7 +342,7 @@ class chooseField(TemplateView):
     for parent in parentFields:
         fieldsFiltered[parent['name']] = Field.objects.filter(parent__slug = parent['slug']).values()
 
-    context = {'title': 'Timetable scrapper | wybierz kierunek', 'headertitle': 'wybierz odpowiadający plan', 'fieldsFiltered': fieldsFiltered}
+    context = {'title': 'Easytable | wybierz kierunek', 'headertitle': 'wybierz odpowiadający plan', 'fieldsFiltered': fieldsFiltered}
 
     def get(self, request):
         return render(request, self.template, self.context)
@@ -350,7 +351,7 @@ class chooseField(TemplateView):
 
 class chooseGroup(TemplateView):
     template = 'groupchooser.html'
-    context = {'title': 'Timetable scrapper | wybierz kierunek', 'headertitle': 'wybierz odpowiadający plan'}
+    context = {'title': 'Easytable | wybierz kierunek', 'headertitle': 'wybierz odpowiadający plan'}
 
     def get(self, request):
         try:
@@ -374,7 +375,7 @@ class chooseGroup(TemplateView):
 
 class tutorial(TemplateView):
     template = 'tutorial.html'
-    context = {'title': 'Timetable scrapper | poradnik', 'headertitle': 'jak zacząć?'}
+    context = {'title': 'Easytable | poradnik', 'headertitle': 'jak zacząć?'}
 
     def get(self, request):
         return render(request, self.template, self.context)
@@ -383,12 +384,28 @@ class tutorial(TemplateView):
 
 class about(TemplateView):
     template = 'about.html'
-    context = {'title': 'Timetable scrapper | o nas'}
+    context = {'title': 'Easytable | o nas'}
 
     def get(self, request):
         return render(request, self.template, self.context)
     def post(self, request):
         return render(request, self.template, self.context)
+
+class downloadFile(TemplateView):
+    def get(self, request):
+        try:
+            requestedName = request.GET['name']
+            
+        except:
+            raise Http404
+        if isfile(f'media/icals/{requestedName}'):
+            print(requestedName)
+            return FileResponse(open(f'media/icals/{requestedName}', 'rb'), as_attachment=True)
+        else:
+            raise Http404
+
+    def post(self, request):
+        raise Http404
 
 # ERROR CODES -----------
 

@@ -5,11 +5,13 @@
 
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/data.css' %}">
+    <link rel="stylesheet" href="{% static 'css/timetable.css' %}">
 {% endblock styles %}
 
 {% block scripts %}
     <script src="{% static 'js/inViewportCheck.js' %}" defer></script>
     <script src="{% static 'js/showFullClass.js' %}" defer></script>
+    <script src="{% static 'js/showMenuOptions.js' %}" defer></script>
 {% endblock scripts %}
 
 {% block content %}
@@ -32,10 +34,6 @@
             {% endfor %}
             </span>
         </p>
-        <form class="form-groups" action="{% url 'chooser-group' %}" method="get">
-            <input aria-label='kierunek' type="text" name="field" id="field" value="{{ field.slug }}" style="visibility: hidden; width: 0; border: none">
-            <button type="submit">wybierz inne grupy</button>
-        </form>
         <p class="note">
             Ostatnia aktualizacja: 
             <span class="bold">
@@ -54,7 +52,7 @@
                     <p>{{ h }}</p>
                 {% endfor %}
             </section>
-            <section class='hours-fixed hours'>
+            <section class='hours-fixed hours' aria-hidden="true">
                 {% for h in hours %}
                     <p>{{ h }}</p>
                 {% endfor %}
@@ -68,7 +66,7 @@
                         </div>
                     {% endfor %}
                 </section>
-                <section class="weekdays-fixed weekdays">
+                <section class="weekdays-fixed weekdays" aria-hidden="true">
                     {% for key, day in weekArr.items %}
                         <div class="day-single {%if today == day %}today{%endif%}">
                             <p>{{ key }}</p>
@@ -80,26 +78,36 @@
                     {% for key, var in planFiltered.items %}
                         <section class='plan-day'>
                             {% for k in var %}
-                            <div data-height='{{ k.dlugosc }}' data-diff="{{ k.diff }}" class='plan-single {{ k.type }} {%if today == k.data %}today{%endif%}'>
+                            <div data-height='{{ k.dlugosc }}' data-diff="{{ k.diff }}" style="--diff: {{ k.diff }}; --height: {{ k.dlugosc }}" class='plan-single {{ k.type }} {%if today == k.data %}today{%endif%}'>
                                 <span>{{ k.od }} - {{ k.do }}</span>
                                 <h3>{{ k.przedmiot }}</h3>
                                 <p>{{ k.stopien }} {{ k.imie }} {{ k.nazwisko }}</p>
                                 <p>sala: {{ k.sala }}</p>
                                 <p>gr.: {{ k.grupa }}</p>
+                                {% if k.rodzaj %}
+                                    <p class="plan-single-type">{{ k.rodzaj }}</p>
+                                {% endif %}
                             </div>
                             {% empty %}
                             <div class="empty"></div>
-                            {% endfor %}
+                            {% endfor %}%
                         </section>
                     {% endfor %}
                 </section>
             </section>
         </section>
     </main>
+    <div class="menu-button" data-menu-options>
+        <p class="menu-label">opcje</p>
+        <div class="menu-content" data-menu-container>
+            <form class="form-groups" action="{% url 'chooser-group' %}" method="get">
+                <input aria-label='kierunek' type="text" name="field" id="field" value="{{ field.slug }}" style="visibility: hidden; width: 0; border: none">
+                <button type="submit">wybierz inne grupy</button>
+            </form>
+            <a class="button" href="{{ filePath }}" download>pobierz iCalendar</a>
+            <form class='buttons-current' method='get' action="{% url 'timetable' %}">
+                <button type="submit" name="week" value="0">obecny tydzień</button>
+            </form>
+        </div>
+    </div>
 {% endblock content %}
-{% block footer %}
-    <form class='buttons-current' method='get' action="{% url 'timetable' %}">
-        <button type="submit" name="week" value="0">obecny tydzień</button>
-    </form>
-    <a href="{{ filePath }}" download>pobierz iCalendar</a>
-{% endblock footer %}

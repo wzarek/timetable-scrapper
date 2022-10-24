@@ -21,8 +21,6 @@
     opacity: 0.3;
 }
 
-/* PLAN */
-
 main#timetable {
     color: black;
     justify-content: center;
@@ -246,67 +244,4 @@ main#tutorial p:last-of-type {
     position: sticky;
     position: -webkit-sticky;
     top: 10px;
-}
-
-/* GLOBAL */
-
-h1 {
-    font-weight: 500;
-    margin: .5em 1em;
-}
-
-
-button {
-    padding: .5vh .5vw;
-    margin: .5vh .5vw;
-}
-
-h1 > a {
-    font-weight: 500;
-}
-
-span.bold {
-    font-weight: 500;
-}
-
-p.note {
-    font-size: .8rem;
-    margin-bottom: 1rem;
-    margin-left: 1rem;
-    position: relative;
-    color: white;
-    width: 100%;
-}
-
-p.note::after {
-    content: '';
-    height: 100%;
-    border-left: 1px solid red;
-    bottom: 0;
-    left: -1rem;
-    position: absolute;
-}
-
-a {
-    text-decoration: none;
-    color: var(--accent-color);
-}
-
-a:hover {
-    color: rgb(80, 178, 244);
-}
-
-button {
-    background-color: var(--accent-color);
-    color: black;
-    border: none;
-    padding: .5em 1em;
-    border-radius: 1em;
-    cursor: pointer;
-    transition-duration: .25s;
-}
-
-button:hover {
-    background-color: black;
-    color: white;
 }

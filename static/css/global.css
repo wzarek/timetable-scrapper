@@ -96,7 +96,7 @@ a:hover {
     color: rgb(80, 178, 244);
 }
 
-button {
+button, a.button {
     background: rgba(0, 115, 185, 0.24);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
@@ -109,7 +109,7 @@ button {
     color: white;
 }
 
-button:hover {
+button:hover, a.button:hover {
     background-color: black;
 }
 
@@ -126,6 +126,7 @@ footer {
     align-items: center;
     color: white;
     background-color: transparent;
+    font-size: 0.75em;
 }
 
 header h1 {
@@ -145,7 +146,11 @@ header nav {
     top: 0;
     height: 100vh;
     width: 25vw;
-    background-color: rgba(255, 255, 255, .95);
+    background-color: rgba(0 0 0 / .25);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(9.5px);
+    border-left: 1px solid rgba(29, 146, 218, 0.56);
     transition: right .35s 0s ease-out;
     z-index: 99;
 }
@@ -154,7 +159,6 @@ header nav svg {
     cursor: pointer;
     width: 2.5rem;
     height: 2.5rem;
-    fill: black;
     margin-left: 1vw;
     margin-top: 1vw;
 }
@@ -170,7 +174,7 @@ header nav ul {
 }
 
 header nav ul li a {
-    color: black;
+    color: white;
 }
 
 header nav ul li.active-link a {

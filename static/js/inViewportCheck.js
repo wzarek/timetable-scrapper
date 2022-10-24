@@ -39,7 +39,7 @@ window.addEventListener('scroll', () => {
 let d = document.querySelector('.timetable-container');
 d.addEventListener('scroll', () => {
     weekdaysFixed.style.left = `calc(${(100 - mainWidth)/2}vw + ${hoursWidth} - ${d.scrollLeft}px)`;
-    hoursFixed.style.left = `${d.scrollLeft}px`;
+    //hoursFixed.style.left = `${d.scrollLeft}px`;
     if (d.scrollLeft > hours.style.width + 30) {
         hoursFixed.style.display = 'block';
         hours.style.visibility = 'hidden';
