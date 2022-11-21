@@ -11,13 +11,15 @@
     <meta name="keywords" content="opole, uniwersytet opolski, plan zajęć, arkusz">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/rwd.css' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/icons/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/icons/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/icons/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'img/icons/site.webmanifest' %}">
     {% block styles %}
     {% endblock styles %}
     <script defer src="{% static 'js/hamburgerMenu.js' %}" ></script>
     {% block scripts %}
     {% endblock scripts %}
-    <title>{{ title }}</title>
-</head>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XTPH44GVNE"></script>
     <script>
@@ -27,6 +29,8 @@
 
       gtag('config', 'G-XTPH44GVNE');
     </script>
+    <title>{{ title }}</title>
+</head>
     <body>
     <header>
         <h1>

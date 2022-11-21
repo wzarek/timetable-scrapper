@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <main id="error">
+        <section>
+            <h2>Błąd: {{ error }}</h2>
+            <p class="note">
+                Jeśli uważasz, że błąd spowodowany jest nieprawidłowym działaniem aplikacji skontaktuj się na <a href="mailto:contact@wzarek.me">contact@wzarek.me</a> <br />
+            </p>
+            <p>
+                {{ errordesc }}
+            </p>
+            <a href="{% url 'homepage' %}">powrót do strony głównej</a>
+        </section>
+    </main>
+{% endblock content %}
+{% block footer %}
+    <a href="#homepage">do góry</a>
+    <p>widzisz błąd na stronie? <a href="mailto:contact@wzarek.me">zgłoś to</a></p>
+{% endblock footer %}

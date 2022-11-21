@@ -9,6 +9,7 @@ urlpatterns = [
     path('wybierz-grupe', views.chooseGroup.as_view(), name="chooser-group"),
     path('poradnik', views.tutorial.as_view(), name="tutorial"),
     path('o-nas', views.about.as_view(), name="about"),
+    path('pobierz-plan', views.downloadFile.as_view(), name="download-calendar"),
     path('api/get-fields', views.getFieldsToUpdate.as_view(), name="api-get-fields"),
     path('api/change-field', views.updateField.as_view(), name="api-change-field"),
 ]

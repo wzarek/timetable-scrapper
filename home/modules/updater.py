@@ -4,8 +4,12 @@ from urllib import request
 from bs4 import BeautifulSoup
 import requests
 from lxml import etree
+from mailer.emailsender import EmailSender
 
 rootEndpoint = 'https://timetable.wzarek.me'
+rootPath = '/home/wzarek/media'
+
+changed_sheets = []
 
 def getSheetsToUpdate():
     try:
@@ -21,8 +25,9 @@ def getSheetsToUpdate():
         try:
             updateSheet(field['link'], field['xpath'], field['filename'], field['slug'])
         except Exception as e:
-            print(e + ' Could not update ' + field['slug'])
+            print(str(e) + ' Could not update ' + field['slug'])
             return
+    EmailSender(['kontakt.wzarek@gmail.com']).sendReport(changed_sheets)
 
 def updateSheet(link, x_path, filename, slug):
     try:
@@ -32,20 +37,20 @@ def updateSheet(link, x_path, filename, slug):
         file = dom.xpath(x_path)[0]
         href = file.get('href')
     except Exception as e:
-        print('Could not get the response from link', e)
+        print('Could not get the response from link', str(e))
         return
-    if f'{file.text}.xls' != filename or not isfile(f'/home/wzarek/sheets/{filename}'):
+    if f'{file.text}.xls' != filename or not isfile(f'{rootPath}/sheets/{filename}'):
         try:
-            if isfile(f'/home/wzarek/sheets/{filename}'):
-                rename(f'/home/wzarek/sheets/{filename}', f'/home/wzarek/sheets_archive/{filename}')
+            if isfile(f'{rootPath}/sheets/{filename}'):
+                rename(f'{rootPath}/sheets/{filename}', f'{rootPath}/sheets_archive/{filename}')
         except Exception as e:
-            print('Could not archive: ' + filename + ' ' + e)
+            print('Could not archive: ' + filename + ' ' + str(e))
         try:
-            with open('/home/wzarek/sheets/' + file.text + '.xls', 'wb') as created_file:
+            with open(f'{rootPath}/sheets/{file.text}.xls', 'wb') as created_file:
                 res = requests.get(href)
                 created_file.write(res.content)
         except Exception as e:
-            print('Could not create new file: ' + file.text + ' ' + e)
+            print('Could not create new file: ' + file.text + ' ' + str(e))
         try:
             sendUpdatedSheet(slug, f'{file.text}.xls', href)
         except:
@@ -56,7 +61,7 @@ def updateSheet(link, x_path, filename, slug):
 def sendUpdatedSheet(slug, file, link):
     apiEndpoint = f'{rootEndpoint}/api/change-field?slug={slug}&file={file}&link={link}'
     response = requests.get(apiEndpoint)
+    changed_sheets.append(slug)
     print(response.json())
 
 getSheetsToUpdate()
-# updateSheet('https://wnoz.uni.opole.pl/plan-zajec-dietetyka-1/', '/html/body/div[1]/div[2]/div/article/div/div/div/div/div[2]/div/div/div/ul[1]/li[2]/strong/a', 'asd')

@@ -30,7 +30,7 @@
     footer {
         font-size: .8rem;
     }
-} 
+}
 
 @media only screen and (max-width: 900px) {
     :root {
@@ -68,7 +68,7 @@
     footer {
         grid-template-columns: 2fr 1fr 2fr;
     }
-} 
+}
 
 @media only screen and (max-width: 700px) {
     :root {
@@ -106,7 +106,7 @@
     .plan-single {
         font-size: .7rem;
         height: calc(var(--height) * 1.5rem);
-        margin-top: calc(var(--diff) * 1.5rem);
+        top: calc(var(--diff) * 1.5rem);
     }
 
     .plan-single h3 {
@@ -117,7 +117,7 @@
         font-size: .6rem;
         line-height: 1.5rem;
     }
-} 
+}
 
 @media only screen and (max-width: 600px) {
     :root {
@@ -128,7 +128,7 @@
     main {
         overflow-x: scroll;
     }
-    
+
     p.note {
         width: 90%;
     }
@@ -169,7 +169,7 @@
     .plan-single {
         font-size: .7rem;
         height: calc(var(--height) * 1.5rem);
-        margin-top: calc(var(--diff) * 1.5rem);
+        top: calc(var(--diff) * 1.5rem);
     }
 
     .hours {
@@ -187,4 +187,4 @@
     footer a {
         display: block;
     }
-} 
+}

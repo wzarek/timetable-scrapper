@@ -1,3 +1,4 @@
+from email.policy import default
 from pyexpat import model
 from re import L
 from turtle import ondrag
@@ -22,6 +23,7 @@ class Field(models.Model):
     year = models.IntegerField(null=True, blank=True)
     type = models.CharField(max_length=50, blank=True)
     x_path = models.CharField(max_length=150, blank=True, null=True)
+    visitcount = models.IntegerField(null=True, blank=True, default=0)
     root_link = models.URLField()
     link = models.URLField(blank=True)
     file = models.FileField(upload_to='sheets/', blank=True)
@@ -29,6 +31,7 @@ class Field(models.Model):
     updated = models.DateTimeField()
     university = models.ForeignKey(University, on_delete=models.CASCADE)
     parent = models.ForeignKey("self", on_delete=models.CASCADE, blank=True, null=True)
+    groups = models.CharField(max_length=200, blank=True, null=True)
     slug = models.SlugField()
 
     def __str__(self):
@@ -36,15 +39,6 @@ class Field(models.Model):
     
     def filename(self):
         return os.path.basename(self.file.name)
-
-class Group(models.Model):
-    name = models.CharField(max_length=100)
-    fields = models.ManyToManyField(Field)
-    university = models.ForeignKey(University, on_delete=models.CASCADE)
-    slug = models.SlugField()
-
-    def __str__(self):
-        return self.name
 
 class Faculty(models.Model):
     name = models.CharField(max_length=100)

@@ -17,7 +17,7 @@
             <label for="groups">grupy</label>
             <select multiple name="groups" id="groups">
                 {% for group in groups %}
-                <option value="{{ group.slug }}">{{ group.name }}</option>
+                <option value="{{ group }}">{{ group }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -26,6 +26,9 @@
         </p>
         <p class="note">
             Grupa <span class="bold">cały rok</span> dodawana jest automatycznie.
+        </p>
+        <p class="note">
+            Grupy i plany zajęć odświeżane są codziennie o godz. 7 i 19.
         </p>
         <div class="form-field">
             <button type="submit">pokaż plan</button>
