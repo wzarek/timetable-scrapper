@@ -73,7 +73,7 @@
 main#timetable {
     color: black;
     justify-content: center;
-    margin-top: 10vh;
+    margin-block: 5vh;
 }
 
 main#timetable form.form-groups {
@@ -100,7 +100,7 @@ main#timetable form.form-groups {
     position: relative;
 }
 
-.plan-single.today{
+.plan-single.today {
     border: 1px solid rgba(29, 146, 218, 0.7);
     background: rgba(0, 115, 185, 0.54);
     color: rgba(255, 255, 255, 0.8);
@@ -296,4 +296,55 @@ footer {
     display: flex;
     justify-content: center;
     margin-bottom: 5vw;
+}
+
+/* INTROJS */
+
+div.tooltip-introjs {
+    background-color: rgba(0 0 0 / .25);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(9.5px);
+    border: 1px solid rgba(29, 146, 218, 0.56);
+    padding: .5em 1em;
+    border-radius: 1em;
+    color: rgba(255 255 255 / .9)
+}
+
+div.introjs-tooltipbuttons a {
+    background-color: rgba(0 0 0 / .25);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(9.5px);
+    border: 1px solid rgba(29, 146, 218, 0.56);
+    border-radius: 1em;
+    color: white;
+    text-shadow: none;
+    font-weight: 200;
+}
+
+div.introjs-tooltipReferenceLayer,
+div.introjs-tooltipReferenceLayer * {
+    font-family: inherit !important;
+}
+
+div.introjs-tooltipbuttons a:hover {
+    cursor: pointer;
+    color: rgb(29, 146, 218);
+    background: black;
+}
+
+div.introjs-tooltipbuttons a:focus {
+    border: 2px solid rgba(29, 146, 218, 0.56);
+    box-shadow: none;
+    background-color: inherit;
+    color: rgb(29, 146, 218);
+}
+
+a.introjs-skipbutton {
+    color: white;
+}
+
+a.introjs-skipbutton:hover {
+    color: rgb(29, 146, 218);
 }

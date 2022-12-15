@@ -6,18 +6,34 @@
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/data.css' %}">
     <link rel="stylesheet" href="{% static 'css/timetable.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/6.0.0/introjs.min.css" />
 {% endblock styles %}
 
 {% block scripts %}
     <script src="{% static 'js/inViewportCheck.js' %}" defer></script>
     <script src="{% static 'js/showFullClass.js' %}" defer></script>
     <script src="{% static 'js/showMenuOptions.js' %}" defer></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/6.0.0/intro.min.js"></script>
+    <script defer>
+        window.addEventListener('load', () => {
+            let doneTour = localStorage.getItem('doneTour') === 'true'
+            if (doneTour) return
+            introJs().setOptions({
+                'tooltipClass': 'tooltip-introjs',
+                'nextLabel': ' > ',
+                'prevLabel': ' < ',
+                'doneLabel': 'gotowe'
+            }).start()
+            .oncomplete(localStorage.setItem('doneTour', 'true'))
+            .onexit(localStorage.setItem('doneTour', 'true'))
+        })
+    </script>
 {% endblock scripts %}
 
 {% block content %}
     <section class='buttons-week'>
         <form method='get' action="{% url 'timetable' %}">
-            <button title="poprzedni tydzień" type="submit" name="week" value="{{ wNum | add:-1 }}">&#10094;</button>
+            <button data-intro='Aby przejść do innego tygodnia kliknij tutaj' title="poprzedni tydzień" type="submit" name="week" value="{{ wNum | add:-1 }}">&#10094;</button>
         </form>
         <form method='get' action="{% url 'timetable' %}">
             <button title="następny tydzień" type="submit" name="week" value="{{ wNum | add:1 }}">&#10095;</button>
@@ -43,7 +59,7 @@
             </span> 
             <a href="mailto:contact@wzarek.me">zgłoś błąd</a>
         </p>
-        <p class="note">
+        <p class="note" data-intro='Jeśli nie widać informacji na kafelku - kliknij w niego'>
             Jeśli nie widać wszystkich informacji na kafelku - <span class="bold">kliknij</span> na niego, rozwinie się cały.
         </p>
         <section class="timetable-container">
@@ -97,7 +113,7 @@
             </section>
         </section>
     </main>
-    <div class="menu-button" data-menu-options>
+    <div class="menu-button" data-menu-options data-intro='Tutaj znajdują się opcje, może chcesz pobrać kalendarz do swojego telefonu albo włączyć powiadomienia?'>
         <p class="menu-label">opcje</p>
         <div class="menu-content" data-menu-container>
             <form class="form-groups" action="{% url 'chooser-group' %}" method="get">
