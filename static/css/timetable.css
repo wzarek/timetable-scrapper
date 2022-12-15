@@ -163,13 +163,16 @@ main#timetable form.form-groups {
 
 .buttons-week form {
     left: 2vw;
-    height: 80%;
+    top: 50%;
+    transform: translateY(-50%);
     position: fixed;
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 55;
     width: auto;
+    padding: 0;
+    margin: 2em;
 }
 
 .buttons-week form:nth-of-type(2) {
