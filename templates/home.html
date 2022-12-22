@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block scripts %}
+    <script defer src="{% static 'js/divLines.js' %}"></script>
+{% endblock scripts %}
 {% block content %}
     <main id="homepage">
         <section id="about">

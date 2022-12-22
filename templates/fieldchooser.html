@@ -1,7 +1,28 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/@jaycverg/select-pure@0.6.0-alpha.1/dist/bundle.min.js"></script>
+<script defer>
+    const myOptions = [
+        {% for name, fields in fieldsFiltered.items %}
+            {% for field in fields %}
+            {
+                label: '{{ field.name }}, {{ field.year }} rok, {{ field.degree }}, {{ field.type }}',
+                value: '{{ field.slug }}'
+            },
+            {% endfor %}
+        {% endfor %}
+    ];
+    let instance = new SelectPure(".masno", {
+            options: myOptions
+        });
+</script>
+{% endblock scripts %}
 {% block content %}
 <main id="choose">
+    <span class="masno">
+
+    </span>
     <form method='get' action="{% url 'chooser-group' %}">
         <div class="form-field">
             <label for="field">wybierz kierunek</label>
