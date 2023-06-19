@@ -117,7 +117,7 @@ main#timetable form.form-groups {
     padding: .5vh .5vw;
     min-width: 100%;
     min-height: calc(var(--height) * 3vh);
-    top: calc(var(--diff) * 3vh);
+    margin-top: calc(var(--diff) * 3vh);
     font-size: 0.7vw;
     border-radius: 1em;
 }

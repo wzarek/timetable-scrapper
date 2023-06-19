@@ -94,6 +94,11 @@ main#homepage section {
     width: 70%;
     margin-inline: auto;
     font-size: 95%;
+    height: 50vh;
+}
+
+main#homepage>section {
+    height: auto;
 }
 
 .button-action {
@@ -123,9 +128,9 @@ main#homepage section {
 .svg-wave {
     position: relative;
     width: 100vw;
-    margin-top: -90vh;
+    margin-top: -40vw;
     z-index: -2;
-    margin-bottom: -20vh;
+    margin-bottom: -14vw;
 }
 
 #card-info {
@@ -139,8 +144,8 @@ main#homepage section {
 .svg-wave-reversed {
     position: relative;
     width: 100vw;
-    margin-top: -20vh;
-    margin-bottom: -40vh;
+    margin-top: -14vw;
+    margin-bottom: -30vw;
     z-index: -2;
     transform: rotate(180deg);
 }
@@ -185,13 +190,13 @@ main#homepage section {
     right: -38%;
 } */
 
-.card-line{
-    position:absolute;
+.card-line {
+    position: absolute;
     width: 1px;
     border-left: 3px dashed rgba(29, 146, 218, 0.6);
     /* background-color:red; */
     z-index: 0;
-}  
+}
 
 #to-tutorial {
     margin-top: -50vh;

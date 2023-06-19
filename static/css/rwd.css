@@ -5,7 +5,6 @@
     }
 
     main,
-    main#homepage,
     main#tutorial,
     main#about {
         width: var(--main-width);
@@ -30,7 +29,7 @@
     footer {
         font-size: .8rem;
     }
-} 
+}
 
 @media only screen and (max-width: 900px) {
     :root {
@@ -41,7 +40,12 @@
         margin-top: 3vh;
     }
 
-    header, footer {
+    main#homepage {
+        margin-top: 20vh;
+    }
+
+    header,
+    footer {
         width: 100vw;
     }
 
@@ -68,14 +72,22 @@
     footer {
         grid-template-columns: 2fr 1fr 2fr;
     }
-} 
+
+    .menu-button,
+    .menu-content button,
+    .menu-content a {
+        font-size: .75rem;
+    }
+}
 
 @media only screen and (max-width: 700px) {
     :root {
-        --timetable-width: 80vw;
+        --timetable-width: 90vw;
+        --main-width: 95vw;
     }
 
-    header, footer {
+    header,
+    footer {
         font-size: .7rem;
     }
 
@@ -91,8 +103,22 @@
         width: 100%;
     }
 
+    main#homepage {
+        margin-top: 10vh;
+    }
+
     .buttons-week button {
         padding: .75rem .5rem;
+    }
+
+    .buttons-week form {
+        left: 1vw;
+        margin: .5em;
+    }
+
+    .buttons-week form:nth-of-type(2) {
+        left: unset;
+        right: 1vw;
     }
 
     .timetable {
@@ -105,6 +131,7 @@
 
     .plan-single {
         font-size: .7rem;
+        min-height: calc(var(--height) * 1.5rem);
         height: calc(var(--height) * 1.5rem);
         margin-top: calc(var(--diff) * 1.5rem);
     }
@@ -117,18 +144,18 @@
         font-size: .6rem;
         line-height: 1.5rem;
     }
-} 
+
+    .menu-button {
+        width: 70vw;
+        left: calc(50% - 35vw);
+    }
+}
 
 @media only screen and (max-width: 600px) {
     :root {
-        --timetable-width: 120vw;
         --hours-width: 10vw;
     }
 
-    main {
-        overflow-x: scroll;
-    }
-    
     p.note {
         width: 90%;
     }
@@ -142,7 +169,8 @@
         overflow-x: scroll;
     }
 
-    header, footer {
+    header,
+    footer {
         font-size: .7rem;
     }
 
@@ -168,8 +196,13 @@
 
     .plan-single {
         font-size: .7rem;
+        min-height: calc(var(--height) * 1.5rem);
         height: calc(var(--height) * 1.5rem);
         margin-top: calc(var(--diff) * 1.5rem);
+    }
+
+    .plan-single-type {
+        display: none;
     }
 
     .hours {
@@ -187,4 +220,4 @@
     footer a {
         display: block;
     }
-} 
+}

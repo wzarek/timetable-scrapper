@@ -40,10 +40,10 @@ const adjustLine = (from, to, line) => {
 const cardContainer = document.querySelector('.card-container')
 const cards = cardContainer.querySelectorAll('.card-single')
 
-for (let i=0; i<cards.length-1; i++){
-    let line = document.createElement('div')
-    line.id = `card-line-${i}`
-    line.classList.add('card-line')
-    cardContainer.appendChild(line)
-    adjustLine(cards[i], cards[i+1], line)
-}
+// for (let i=0; i<cards.length-1; i++){
+//     let line = document.createElement('div')
+//     line.id = `card-line-${i}`
+//     line.classList.add('card-line')
+//     cardContainer.appendChild(line)
+//     adjustLine(cards[i], cards[i+1], line)
+// }
